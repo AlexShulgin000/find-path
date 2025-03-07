@@ -40,7 +40,7 @@ Devvit.addCustomPostType({
   name: "Experience Post",
   // TODO А ЭТО ЧТО ?  height: 'tall',
   height: "regular",
-  render: async (_context) => {
+  render: async _context => {
     const handleStart = () => {
       console.log(1);
     };
@@ -49,8 +49,8 @@ Devvit.addCustomPostType({
       console.log(2);
     };
 
-    return  (
-      <zstack width="100%" height="100%" alignment="top start">
+    return (
+      await <zstack width="100%" height="100%" alignment="top start">
         <image
           imageHeight={576}
           imageWidth={768}
