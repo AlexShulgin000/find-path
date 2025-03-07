@@ -10,7 +10,7 @@ Devvit.configure({
 
 // Add a menu item to the subreddit menu for instantiating the new experience post
 Devvit.addMenuItem({
-  label: "Add my post",
+  label: "Add Find Path game",
   location: "subreddit",
   forUserType: "moderator",
   onPress: async (_event, context) => {
@@ -37,10 +37,9 @@ Devvit.addMenuItem({
 
 // Add a post type definition
 Devvit.addCustomPostType({
-  name: "Experience Post",
-  // TODO А ЭТО ЧТО ?  height: 'tall',
-  height: "regular",
-  render: async _context => {
+  name: "Find Path!",
+  height: "tall",
+  render: _context => {
     const handleStart = () => {
       console.log(1);
     };
@@ -50,7 +49,7 @@ Devvit.addCustomPostType({
     };
 
     return (
-      await <zstack width="100%" height="100%" alignment="top start">
+      <zstack width="100%" height="100%" alignment="top start">
         <image
           imageHeight={576}
           imageWidth={768}
@@ -101,7 +100,7 @@ Devvit.addCustomPostType({
           <hstack height="20%" alignment="center" padding="medium">
             <Text size={4}>Find path</Text>
           </hstack>
-          <vstack width="40%" gap="small">
+          <vstack width="40%" gap="small" minWidth='240px'>
             <Button onClick={handleStart}>Start</Button>
             <Button onClick={handleShowLeaderTable}>Show leaders</Button>
           </vstack>

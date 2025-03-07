@@ -16,7 +16,7 @@ interface Glyph {
   height: number;
 }
 
-export const Text = async ({
+export const Text = ({
   children,
   size = 2,
   color = THEME.colors.secondary,
@@ -55,7 +55,7 @@ export const Text = async ({
   const scaledHeight: Devvit.Blocks.SizeString = `${height * size}px`;
   const scaledWidth: Devvit.Blocks.SizeString = `${width * size}px`;
 
-  return await (
+  return (
     <image
       imageHeight={height}
       imageWidth={width}
