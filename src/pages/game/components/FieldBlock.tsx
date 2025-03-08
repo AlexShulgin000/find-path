@@ -1,14 +1,28 @@
 import {Devvit} from "@devvit/public-api";
 import {THEME} from "../../../theme.js";
-import type {SizeString} from "../../../types.js";
+import {ContainerCornerRadius, SizeString} from "../../../types.js";
+
+const DEFAULT_SIZE = 40;
 
 interface IFieldBlockProps {
-    size?: SizeString;
+  size?: SizeString;
+  cornerRadius?: ContainerCornerRadius;
+  onPress?: () => void;
 }
 
-export const FieldBlock = ({size = 40}: IFieldBlockProps) => {
-    return (<vstack cornerRadius='small' width={size} height={size}
-                    maxWidth='40px'
-                    backgroundColor={THEME.colors.additionalLight}>
-    </vstack>)
-}
+export const FieldBlock = ({
+  size = "40px",
+  onPress,
+  cornerRadius,
+}: IFieldBlockProps) => {
+  return (
+    <vstack
+      cornerRadius={cornerRadius}
+      width={size}
+      height={size}
+      minWidth={`${DEFAULT_SIZE}px`}
+      minHeight={`${DEFAULT_SIZE}px`}
+      onPress={onPress}
+      backgroundColor={THEME.colors.additionalLight}></vstack>
+  );
+};
