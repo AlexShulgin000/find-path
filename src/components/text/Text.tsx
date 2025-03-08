@@ -19,7 +19,7 @@ interface Glyph {
 export const Text = ({
   children,
   size = 2,
-  color = THEME.colors.secondary,
+  color = THEME.colors.champagne,
 }: ITextProps) => {
   const line = children[0].split("");
   const gap = 1;

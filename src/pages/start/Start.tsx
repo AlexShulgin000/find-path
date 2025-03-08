@@ -39,31 +39,31 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
           <hstack
             width="15px"
             height="60%"
-            backgroundColor={THEME.colors.additionalLight}
+            backgroundColor={THEME.colors.orange}
             cornerRadius="medium"
           />
           <hstack
             width="25px"
             height="80%"
-            backgroundColor={THEME.colors.additionalLight}
+            backgroundColor={THEME.colors.orange}
             cornerRadius="medium"
           />
           <hstack
             width="50px"
             height="80%"
-            backgroundColor={THEME.colors.additionalDark}
+            backgroundColor={THEME.colors.blood}
             cornerRadius="small"
           />
           <hstack
             width="25px"
             height="80%"
-            backgroundColor={THEME.colors.additionalLight}
+            backgroundColor={THEME.colors.orange}
             cornerRadius="medium"
           />
           <hstack
             width="15px"
             height="60%"
-            backgroundColor={THEME.colors.additionalLight}
+            backgroundColor={THEME.colors.orange}
             cornerRadius="medium"
           />
         </hstack>

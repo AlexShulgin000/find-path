@@ -22,7 +22,7 @@ export const FieldBlock = ({
       width={CELL_FULL_SIZE}
       height={CELL_FULL_SIZE}>
       <vstack
-        borderColor={THEME.colors.additionalDark}
+        borderColor={THEME.colors.blood}
         border="thin"
         cornerRadius={cornerRadius}
         width={CELL_VISUAL_SIZE}

@@ -33,7 +33,7 @@ enum ECheckStatus {
 }
 
 export const GamePage = ({onChangeActivePage}: IPageProps) => {
-  const [passedPath, setPassedPath] = useState({}); // {"row.cell": "row.cell"}
+  const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
   const [heroPosition, setHeroPosition] = useState({rowIndex: 0, cellIndex: 0});
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
   const heroAllowedSteps = getHeroAllowedSteps(testBlocks, heroPosition);
@@ -56,7 +56,10 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
     if (checkingStatus !== ECheckStatus.idle) return;
-    setPassedPath(prev => ({...prev, [`${rowIndex}.${cellIndex}`]: true}));
+    setPassedPath(prev => ({
+      ...prev,
+      [`${heroPosition.rowIndex}.${heroPosition.cellIndex}`]: true,
+    }));
     setCheckingStatus(ECheckStatus.wait);
     setHeroPosition({rowIndex, cellIndex});
     firstCheckStep.start();
@@ -64,21 +67,21 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
 
   const getBgCell = (isPassedCell: boolean, isHeroCell: boolean) => {
     if (isPassedCell) {
-      return THEME.colors.primary;
+      return THEME.colors.orange;
     }
     if (isHeroCell) {
       switch (checkingStatus) {
         case ECheckStatus.success:
-          return THEME.colors.secondary;
+          return THEME.colors.orange;
         case ECheckStatus.wait:
-          return THEME.colors.primary;
+          return THEME.colors.champagne;
         case ECheckStatus.fail:
-          return THEME.colors.additionalDark;
+          return THEME.colors.blood;
         default:
-          return THEME.colors.secondary;
+          return THEME.colors.orange;
       }
     }
-    return THEME.colors.additionalLight;
+    return THEME.colors.dark;
   };
 
   return (
@@ -104,8 +107,6 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
                 !!passedPath[
                   `${rowIndex}.${cellIndex}` as keyof typeof passedPath
                 ];
-              const cornerCellRadius =
-                CELL_RADIUS[rowIndex as keyof typeof CELL_RADIUS];
               const isHeroCell =
                 heroPosition.rowIndex === rowIndex &&
                 heroPosition.cellIndex === cellIndex;
@@ -119,7 +120,7 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
               return (
                 <FieldBlock
                   onPress={handlePress}
-                  cornerRadius={cornerCellRadius}
+                  cornerRadius={CELL_RADIUS[rowIndex]}
                   backgroundColor={getBgCell(isPassedCell, isHeroCell)}>
                   <>
                     {!isHeroCell && isCellHasAllowedStep && (

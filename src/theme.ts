@@ -1,8 +1,8 @@
 export const THEME = {
   colors: {
-    primary: "#1e2640",
-    secondary: "#f3eac0",
-    additionalLight: "#dc9750",
-    additionalDark: "#922c40",
+    dark: "#1e2640",
+    champagne: "#f3eac0",
+    orange: "#dc9750",
+    blood: "#922c40",
   },
 } as const;

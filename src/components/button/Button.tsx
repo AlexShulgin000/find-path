@@ -23,8 +23,8 @@ export const Button = ({
       alignment="center middle"
       padding="small"
       border="thick"
-      borderColor={THEME.colors.additionalDark}
-      backgroundColor={THEME.colors.primary}
+      borderColor={THEME.colors.blood}
+      backgroundColor={THEME.colors.dark}
       onPress={onClick}>
       <Text>{children}</Text>
     </hstack>

@@ -14,7 +14,7 @@ export const AllowedStep = ({onPress}: IAllowedStepProps) => {
       cornerRadius="large"
       width={size}
       height={size}
-      backgroundColor={THEME.colors.secondary}
+      backgroundColor={THEME.colors.champagne}
     />
   );
 };
