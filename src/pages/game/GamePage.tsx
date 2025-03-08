@@ -26,55 +26,61 @@ const testBlocks: TBlocks = [
 ];
 
 enum ECheckStatus {
-    idle = 'idle',
-    wait = 'wait',
-    success = 'success',
-    fail = 'fail',
+  idle = "idle",
+  wait = "wait",
+  success = "success",
+  fail = "fail",
 }
 
 export const GamePage = ({onChangeActivePage}: IPageProps) => {
+  const [passedPath, setPassedPath] = useState({}); // {"row.cell": "row.cell"}
   const [heroPosition, setHeroPosition] = useState({rowIndex: 0, cellIndex: 0});
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
-  const heroAllowedSteps = getHeroAllowedSteps(testBlocks, heroPosition)
+  const heroAllowedSteps = getHeroAllowedSteps(testBlocks, heroPosition);
 
   const finalCheckStep = useInterval(() => {
-      finalCheckStep.stop()
-      if(checkingStatus === ECheckStatus.fail){
-          // show lose screen
-      } else {
-          setCheckingStatus(ECheckStatus.idle);
-      }
-  }, 300)
+    finalCheckStep.stop();
+    if (checkingStatus === ECheckStatus.fail) {
+      // show lose screen -> onChangeActivePage()
+    } else {
+      setCheckingStatus(ECheckStatus.idle);
+    }
+  }, 300);
 
   const firstCheckStep = useInterval(() => {
-            firstCheckStep.stop()
-            const success = !!testBlocks[heroPosition.rowIndex][heroPosition.rowIndex]
-      console.log(2, heroPosition, success)
-            setCheckingStatus(success ? ECheckStatus.success : ECheckStatus.fail);
-      finalCheckStep.start()
-    }, 600);
+    firstCheckStep.stop();
+    const success = !!testBlocks[heroPosition.rowIndex][heroPosition.rowIndex];
+    setCheckingStatus(success ? ECheckStatus.success : ECheckStatus.fail);
+    finalCheckStep.start();
+  }, 600);
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
-      if(checkingStatus !== ECheckStatus.idle) return;
-      setCheckingStatus(ECheckStatus.wait)
-      setHeroPosition({rowIndex, cellIndex})
-      firstCheckStep.start()
+    if (checkingStatus !== ECheckStatus.idle) return;
+    setPassedPath(prev => ({...prev, [`${rowIndex}.${cellIndex}`]: true}));
+    setCheckingStatus(ECheckStatus.wait);
+    setHeroPosition({rowIndex, cellIndex});
+    firstCheckStep.start();
   };
 
-  const getCheckingBgCell = () => {
+  const getBgCell = (isPassedCell: boolean, isHeroCell: boolean) => {
+    if (isPassedCell) {
+      return THEME.colors.primary;
+    }
+    if (isHeroCell) {
       switch (checkingStatus) {
-          case ECheckStatus.success:
-              return THEME.colors.secondary
-          case ECheckStatus.wait:
-              return THEME.colors.primary
-          case ECheckStatus.fail:
-              return THEME.colors.additionalDark
-          default:
-              return undefined
+        case ECheckStatus.success:
+          return THEME.colors.secondary;
+        case ECheckStatus.wait:
+          return THEME.colors.primary;
+        case ECheckStatus.fail:
+          return THEME.colors.additionalDark;
+        default:
+          return THEME.colors.secondary;
       }
     }
+    return THEME.colors.additionalLight;
+  };
 
-    console.log(9, checkingStatus)
   return (
     <zstack width="100%" height="100%" alignment="top start">
       <image
@@ -94,24 +100,33 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
         {testBlocks.map((row, rowIndex) => (
           <FieldRow>
             {row.map((_, cellIndex) => {
+              const isPassedCell =
+                !!passedPath[
+                  `${rowIndex}.${cellIndex}` as keyof typeof passedPath
+                ];
               const cornerCellRadius =
                 CELL_RADIUS[rowIndex as keyof typeof CELL_RADIUS];
               const isHeroCell =
                 heroPosition.rowIndex === rowIndex &&
                 heroPosition.cellIndex === cellIndex;
-              const isCellHasAllowedStep = heroAllowedSteps[rowIndex]?.has(cellIndex)
-                const handlePress = isCellHasAllowedStep && !isHeroCell ? () => handleCellPress(rowIndex, cellIndex) : undefined
-                return (
+              const isCellHasAllowedStep =
+                checkingStatus === ECheckStatus.idle &&
+                heroAllowedSteps[rowIndex]?.has(cellIndex);
+              const handlePress =
+                isCellHasAllowedStep && !isHeroCell
+                  ? () => handleCellPress(rowIndex, cellIndex)
+                  : undefined;
+              return (
                 <FieldBlock
                   onPress={handlePress}
                   cornerRadius={cornerCellRadius}
-                  isHero={isHeroCell}
-                  backgroundColor={isHeroCell ? getCheckingBgCell() : undefined}
-                >
-                    <>
-                  {!isHeroCell && isCellHasAllowedStep && <AllowedStep onPress={handlePress} />}
-                  {isHeroCell && <Hero />}
-                    </>
+                  backgroundColor={getBgCell(isPassedCell, isHeroCell)}>
+                  <>
+                    {!isHeroCell && isCellHasAllowedStep && (
+                      <AllowedStep onPress={handlePress} />
+                    )}
+                    {isHeroCell && <Hero />}
+                  </>
                 </FieldBlock>
               );
             })}

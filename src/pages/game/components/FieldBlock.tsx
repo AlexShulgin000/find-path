@@ -6,7 +6,6 @@ import {CELL_FULL_SIZE, CELL_VISUAL_SIZE} from "../game.const.js";
 interface IFieldBlockProps {
   cornerRadius?: ContainerCornerRadius;
   onPress?: () => void;
-  isHero?: boolean;
   children?: JSX.Element;
   backgroundColor?: string;
 }
@@ -14,9 +13,8 @@ interface IFieldBlockProps {
 export const FieldBlock = ({
   onPress,
   cornerRadius,
-  isHero,
   children,
-                             backgroundColor,
+  backgroundColor,
 }: IFieldBlockProps) => {
   return (
     <zstack
@@ -30,9 +28,8 @@ export const FieldBlock = ({
         width={CELL_VISUAL_SIZE}
         height={CELL_VISUAL_SIZE}
         onPress={onPress}
-        backgroundColor={
-          backgroundColor ?? (isHero ? THEME.colors.secondary : THEME.colors.additionalLight)
-        } />
+        backgroundColor={backgroundColor}
+      />
       {children ?? null}
     </zstack>
   );
