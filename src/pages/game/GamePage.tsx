@@ -1,6 +1,9 @@
 import {Devvit, useState} from "@devvit/public-api";
 import {IPageProps, TBlocks} from "../../types.js";
 import {FieldRow} from "./components/FieldRow.js";
+import {FieldBlock} from "./components/FieldBlock.js";
+import {CELL_RADIUS} from "./game.const.js";
+import {Hero} from "./components/Hero.js";
 
 // x | | |
 // x x x |
@@ -20,8 +23,7 @@ const testBlocks: TBlocks = [
 ];
 
 export const GamePage = ({onChangeActivePage}: IPageProps) => {
-  // TODO alway safe positon of 1 row
-  const [position, setBlocs] = useState({rowIndex: 0, cellIndex: 0});
+  const [heroPosition, setHeroPosition] = useState({rowIndex: 0, cellIndex: 0});
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
     console.log(1, rowIndex, cellIndex);
@@ -43,13 +45,24 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
         height="100%"
         padding="medium"
         alignment="middle center">
-        {testBlocks.map((row, i) => (
-          <FieldRow
-            row={row}
-            index={i}
-            onCellPress={handleCellPress}
-            heroPosition={position}
-          />
+        {testBlocks.map((row, rowIndex) => (
+          <FieldRow>
+            {row.map((_, cellIndex) => {
+              const cornerCellRadius =
+                CELL_RADIUS[rowIndex as keyof typeof CELL_RADIUS];
+              const isHeroCell =
+                heroPosition.rowIndex === rowIndex &&
+                heroPosition.cellIndex === cellIndex;
+              return (
+                <FieldBlock
+                  onPress={() => handleCellPress(rowIndex, cellIndex)}
+                  cornerRadius={cornerCellRadius}
+                  isHero={isHeroCell}>
+                  {isHeroCell && <Hero />}
+                </FieldBlock>
+              );
+            })}
+          </FieldRow>
         ))}
       </vstack>
     </zstack>

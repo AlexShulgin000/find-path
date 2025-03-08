@@ -1,21 +1,22 @@
 import {Devvit} from "@devvit/public-api";
 import {THEME} from "../../../theme.js";
 import {ContainerCornerRadius} from "../../../types.js";
+import {CELL_FULL_SIZE} from "../game.const.js";
 
-const CELL_FULL_SIZE = "60px";
 const CELL_VISUAL_SIZE = "40px";
-const HERO_VISUAL_SIZE = "60px";
 
 interface IFieldBlockProps {
   cornerRadius?: ContainerCornerRadius;
   onPress?: () => void;
   isHero?: boolean;
+  children?: JSX.Element;
 }
 
 export const FieldBlock = ({
   onPress,
   cornerRadius,
   isHero,
+  children,
 }: IFieldBlockProps) => {
   return (
     <zstack
@@ -32,17 +33,7 @@ export const FieldBlock = ({
         backgroundColor={
           isHero ? THEME.colors.secondary : THEME.colors.additionalLight
         }></vstack>
-      {isHero ? (
-        <image
-          imageHeight={HERO_VISUAL_SIZE}
-          imageWidth={HERO_VISUAL_SIZE}
-          width={HERO_VISUAL_SIZE}
-          height={HERO_VISUAL_SIZE}
-          url="hero.png"
-          description="Hero"
-          resizeMode="cover"
-        />
-      ) : null}
+      {children ?? null}
     </zstack>
   );
 };
