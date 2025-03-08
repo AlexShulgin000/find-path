@@ -6,7 +6,8 @@ export const CELL_RADIUS = {
   4: "small",
   5: "medium",
   6: "large",
-  7: "large",
 } as const;
 
 export const CELL_FULL_SIZE = "60px";
+
+export const CELL_VISUAL_SIZE = "40px";
