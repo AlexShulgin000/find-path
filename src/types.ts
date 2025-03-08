@@ -15,4 +15,10 @@ export interface IPageProps {
 }
 
 export type TBlock = number | null;
+
 export type TBlocks = TBlock[][];
+
+export interface IHeroPosition {
+  rowIndex: number;
+  cellIndex: number;
+}

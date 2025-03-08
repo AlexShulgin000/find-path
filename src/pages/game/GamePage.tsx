@@ -44,7 +44,12 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
         padding="medium"
         alignment="middle center">
         {testBlocks.map((row, i) => (
-          <FieldRow row={row} index={i} onCellPress={handleCellPress} />
+          <FieldRow
+            row={row}
+            index={i}
+            onCellPress={handleCellPress}
+            heroPosition={position}
+          />
         ))}
       </vstack>
     </zstack>
