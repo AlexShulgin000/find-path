@@ -1,5 +1,5 @@
 import {Devvit} from "@devvit/public-api";
-import {THEME} from "../../../theme.js";
+import {THEME} from "../../theme.js";
 
 interface IAllowedStepProps {
   onPress?: () => void;

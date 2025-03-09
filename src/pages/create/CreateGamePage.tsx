@@ -1,0 +1,85 @@
+import {Devvit, useState} from "@devvit/public-api";
+import {TBlocks} from "../../types.js";
+import {MAX_CELLS, MAX_ROWS} from "../../const.js";
+import {FieldRow} from "../../components/game-field/FieldRow.js";
+import {FieldBlock} from "../../components/game-field/FieldBlock.js";
+import {AllowedStep} from "../../components/game-field/AllowedStep.js";
+import {THEME} from "../../theme.js";
+import {getCreateGameAllowedSteps} from "./create-game.utils.js";
+import {Field} from "../../components/game-field/Field.js";
+import {Text} from "../../components/text/Text.js";
+import {Button} from "../../components/button/Button.js";
+
+const getEmptyBlocks = (): TBlocks =>
+  new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
+
+export const CreateGamePage = () => {
+  const [selectedPath, setSelectedPath] = useState<TBlocks>(getEmptyBlocks());
+  const [step, setStep] = useState<null | number>(null);
+  const allowedSteps = getCreateGameAllowedSteps(selectedPath, step);
+
+  const handleCellPress = (newRowIndex: number, newCellIndex: number) => {
+    const nextStep = step === null ? 0 : step + 1;
+    setSelectedPath(prev =>
+      prev.map((row, currentRowIndex) => {
+        if (currentRowIndex === newRowIndex) {
+          return row.map((cell, currentCellIndex) => {
+            if (currentCellIndex === newCellIndex) {
+              return nextStep;
+            }
+            return cell;
+          });
+        }
+        return row;
+      }),
+    );
+    setStep(nextStep);
+  };
+
+  const handleCreatePath = () => {
+    //
+  };
+
+  return (
+    <Field>
+      <hstack alignment="middle center" width="100%" padding="small">
+        <Text>Create your path</Text>
+      </hstack>
+      <vstack
+        width="100%"
+        height="100%"
+        padding="medium"
+        alignment="middle center">
+        {selectedPath.map((row, rowIndex) => (
+          <FieldRow>
+            {row.map((_, cellIndex) => {
+              const allowedStep = allowedSteps[rowIndex]?.has(cellIndex);
+              const handlePress = allowedStep
+                ? () => handleCellPress(rowIndex, cellIndex)
+                : undefined;
+              return (
+                <FieldBlock
+                  onPress={handlePress}
+                  rowIndex={rowIndex}
+                  backgroundColor={
+                    selectedPath[rowIndex][cellIndex] === null
+                      ? THEME.colors.dark
+                      : THEME.colors.orange
+                  }>
+                  <>{allowedStep && <AllowedStep onPress={handlePress} />}</>
+                </FieldBlock>
+              );
+            })}
+          </FieldRow>
+        ))}
+        <hstack alignment="middle center" padding="xsmall">
+          <Button
+            disabled={!selectedPath[selectedPath.length - 1].some(cell => cell)}
+            onClick={handleCreatePath}>
+            Create
+          </Button>
+        </hstack>
+      </vstack>
+    </Field>
+  );
+};

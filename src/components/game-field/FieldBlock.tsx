@@ -1,10 +1,20 @@
 import {Devvit} from "@devvit/public-api";
-import {THEME} from "../../../theme.js";
-import {ContainerCornerRadius} from "../../../types.js";
-import {CELL_FULL_SIZE, CELL_VISUAL_SIZE} from "../game.const.js";
+import {THEME} from "../../theme.js";
+import {ContainerCornerRadius} from "../../types.js";
+import {CELL_FULL_SIZE, CELL_VISUAL_SIZE} from "../../pages/game/game.const.js";
+
+export const CELL_RADIUS: Record<number, ContainerCornerRadius> = {
+  0: "small",
+  1: "medium",
+  2: "small",
+  3: "medium",
+  4: "small",
+  5: "medium",
+  6: "large",
+};
 
 interface IFieldBlockProps {
-  cornerRadius?: ContainerCornerRadius;
+  rowIndex: number;
   onPress?: () => void;
   children?: JSX.Element;
   backgroundColor?: string;
@@ -12,7 +22,7 @@ interface IFieldBlockProps {
 
 export const FieldBlock = ({
   onPress,
-  cornerRadius,
+  rowIndex,
   children,
   backgroundColor,
 }: IFieldBlockProps) => {
@@ -24,7 +34,7 @@ export const FieldBlock = ({
       <vstack
         borderColor={THEME.colors.blood}
         border="thin"
-        cornerRadius={cornerRadius}
+        cornerRadius={CELL_RADIUS[rowIndex]}
         width={CELL_VISUAL_SIZE}
         height={CELL_VISUAL_SIZE}
         onPress={onPress}

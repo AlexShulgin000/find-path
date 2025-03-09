@@ -22,3 +22,5 @@ export interface IHeroPosition {
   rowIndex: number;
   cellIndex: number;
 }
+
+export type TAllowedSteps = Record<string, Set<number>>;

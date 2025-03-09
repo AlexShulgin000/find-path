@@ -1,12 +1,14 @@
 import {Devvit, useInterval, useState} from "@devvit/public-api";
-import {IPageProps, TBlocks} from "../../types.js";
-import {FieldRow} from "./components/FieldRow.js";
-import {FieldBlock} from "./components/FieldBlock.js";
-import {CELL_RADIUS} from "./game.const.js";
+import {IHeroPosition, IPageProps, TBlocks} from "../../types.js";
+import {FieldRow} from "../../components/game-field/FieldRow.js";
+import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {Hero} from "./components/Hero.js";
-import {getHeroAllowedSteps} from "./game.utils.js";
-import {AllowedStep} from "./components/AllowedStep.js";
+import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {THEME} from "../../theme.js";
+import {useStateGeneric} from "../../hooks/useStateGeneric.js";
+
+import {getHeroAllowedSteps} from "./game.utils.js";
+import {Field} from "../../components/game-field/Field.js";
 
 // x | | |
 // x x x |
@@ -33,15 +35,20 @@ enum ECheckStatus {
 }
 
 export const GamePage = ({onChangeActivePage}: IPageProps) => {
+  // TODO transfrom to Set with useStateGeneric ?
   const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
-  const [heroPosition, setHeroPosition] = useState({rowIndex: 0, cellIndex: 0});
+  // TODO this about it, maybe use standart. not hack
+  const [heroPosition, setHeroPosition] = useStateGeneric<IHeroPosition | null>(
+    null,
+  );
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
   const heroAllowedSteps = getHeroAllowedSteps(testBlocks, heroPosition);
+  const isLastRow = testBlocks.length - 1 === heroPosition?.rowIndex;
 
   const finalCheckStep = useInterval(() => {
     finalCheckStep.stop();
     if (checkingStatus === ECheckStatus.fail) {
-      // show lose screen -> onChangeActivePage()
+      // add fail timer 300 ->  show lose screen -> onChangeActivePage()
     } else {
       setCheckingStatus(ECheckStatus.idle);
     }
@@ -49,17 +56,21 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
 
   const firstCheckStep = useInterval(() => {
     firstCheckStep.stop();
-    const success = !!testBlocks[heroPosition.rowIndex][heroPosition.rowIndex];
+    const success =
+      heroPosition &&
+      typeof testBlocks[heroPosition.rowIndex][heroPosition.cellIndex] ===
+        "number";
     setCheckingStatus(success ? ECheckStatus.success : ECheckStatus.fail);
     finalCheckStep.start();
   }, 600);
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
-    if (checkingStatus !== ECheckStatus.idle) return;
-    setPassedPath(prev => ({
-      ...prev,
-      [`${heroPosition.rowIndex}.${heroPosition.cellIndex}`]: true,
-    }));
+    if (checkingStatus !== ECheckStatus.idle || isLastRow) return;
+    heroPosition &&
+      setPassedPath(prev => ({
+        ...prev,
+        [`${heroPosition.rowIndex}.${heroPosition.cellIndex}`]: true,
+      }));
     setCheckingStatus(ECheckStatus.wait);
     setHeroPosition({rowIndex, cellIndex});
     firstCheckStep.start();
@@ -85,16 +96,12 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
   };
 
   return (
-    <zstack width="100%" height="100%" alignment="top start">
-      <image
-        imageHeight={576}
-        imageWidth={768}
-        height="100%"
-        width="100%"
-        url="field.jpg"
-        description="Dark game field"
-        resizeMode="cover"
-      />
+    <Field>
+      {heroPosition === null && (
+        <vstack width="100%" alignment="middle center">
+          <Hero />
+        </vstack>
+      )}
       <vstack
         width="100%"
         height="100%"
@@ -108,11 +115,13 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
                   `${rowIndex}.${cellIndex}` as keyof typeof passedPath
                 ];
               const isHeroCell =
-                heroPosition.rowIndex === rowIndex &&
-                heroPosition.cellIndex === cellIndex;
+                heroPosition?.rowIndex === rowIndex &&
+                heroPosition?.cellIndex === cellIndex;
               const isCellHasAllowedStep =
-                checkingStatus === ECheckStatus.idle &&
-                heroAllowedSteps[rowIndex]?.has(cellIndex);
+                isLastRow ||
+                (heroPosition === null && rowIndex === 0) ||
+                (checkingStatus === ECheckStatus.idle &&
+                  heroAllowedSteps[rowIndex]?.has(cellIndex));
               const handlePress =
                 isCellHasAllowedStep && !isHeroCell
                   ? () => handleCellPress(rowIndex, cellIndex)
@@ -120,7 +129,7 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
               return (
                 <FieldBlock
                   onPress={handlePress}
-                  cornerRadius={CELL_RADIUS[rowIndex]}
+                  rowIndex={rowIndex}
                   backgroundColor={getBgCell(isPassedCell, isHeroCell)}>
                   <>
                     {!isHeroCell && isCellHasAllowedStep && (
@@ -134,6 +143,6 @@ export const GamePage = ({onChangeActivePage}: IPageProps) => {
           </FieldRow>
         ))}
       </vstack>
-    </zstack>
+    </Field>
   );
 };
