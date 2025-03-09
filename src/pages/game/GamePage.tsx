@@ -28,7 +28,7 @@ const testBlocks: TBlocks = [
   [null, null, 12, 13],
 ];
 
-const GAME_DEMO_OPPONENT_NAME = "Alex ShulginAlex Shulgin";
+const GAME_DEMO_OPPONENT_NAME = "Alex Shulgin";
 
 enum ECheckStatus {
   idle = "idle",
@@ -37,6 +37,7 @@ enum ECheckStatus {
   fail = "fail",
 }
 
+// TODO add timer 100 / 6s. in Finall send time in stat
 export const GamePage = ({onChangeActivePage, context}: IPageProps) => {
   const opponentName = GAME_DEMO_OPPONENT_NAME;
   // TODO transfrom to Set with useStateGeneric ?
