@@ -5,6 +5,7 @@ import {CreateGamePage} from "./pages/create-game/CreateGamePage.js";
 import {ShowHiddenPathPage} from "./pages/show-hidden-path/ShowHiddenPathPage.js";
 import {PostPage} from "./pages/post/PostPage.js";
 import {GameStatFail} from "./pages/game-stat/GameStatFail.js";
+import {GameStatVictory} from "./pages/game-stat/GameStatVictory.js";
 
 export enum EPage {
   start = "start",
@@ -13,6 +14,7 @@ export enum EPage {
   showHiddenPath = "showHiddenPath",
   post = "post",
   gameFail = "gameFail",
+  gameVictory = "gameVictory",
 }
 
 export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
@@ -22,6 +24,7 @@ export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
   [EPage.showHiddenPath]: ShowHiddenPathPage,
   [EPage.post]: PostPage,
   [EPage.gameFail]: GameStatFail,
+  [EPage.gameVictory]: GameStatVictory,
 };
 
 export const MAX_ROWS = 7;

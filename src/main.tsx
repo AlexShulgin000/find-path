@@ -40,8 +40,7 @@ Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
   render: context => {
-    const [activePage, setActivePage] = useState<EPage>(EPage.gameFail);
-    // const [activePage, setActivePage] = useState<EPage>(EPage.start)
+    const [activePage, setActivePage] = useState<EPage>(EPage.gameVictory);
     const Page = PAGES[activePage];
 
     return <Page onChangeActivePage={setActivePage} context={context} />;
