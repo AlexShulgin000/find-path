@@ -7,11 +7,11 @@ import {EPage} from "../../const.js";
 
 export const StartPage = ({onChangeActivePage}: IPageProps) => {
   const handleGuess = () => {
-    onChangeActivePage(EPage.game);
+    onChangeActivePage(EPage.showHiddenPath);
   };
 
   const handleCreate = () => {
-    //
+    onChangeActivePage(EPage.createGame);
   };
 
   const handleShowLeaderTable = () => {
@@ -71,10 +71,10 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
           <Text size={4}>Find path</Text>
         </hstack>
         <vstack width="40%" gap="small" minWidth="240px">
-          <Button onClick={handleGuess}>Guess</Button>
+          <Button onPress={handleGuess}>Guess</Button>
           {/* TODO it can be only on main widjet, or after lose/success game */}
-          <Button onClick={handleCreate}>Create</Button>
-          <Button onClick={handleShowLeaderTable}>Show leaders</Button>
+          <Button onPress={handleCreate}>Create</Button>
+          <Button onPress={handleShowLeaderTable}>Show leaders</Button>
         </vstack>
       </vstack>
     </zstack>

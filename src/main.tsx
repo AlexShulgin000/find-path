@@ -27,7 +27,7 @@ Devvit.addMenuItem({
       // The preview appears while the post loads
       preview: (
         <vstack height="100%" width="100%" alignment="middle center">
-          <text size="large">Loading ...</text>
+          <text size="large">Loading 123 ...</text>
         </vstack>
       ),
     });
@@ -39,12 +39,12 @@ Devvit.addMenuItem({
 Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
-  render: _context => {
-    const [activePage, setActivePage] = useState<EPage>(EPage.showHiddenPath);
+  render: context => {
+    const [activePage, setActivePage] = useState<EPage>(EPage.game);
     // const [activePage, setActivePage] = useState<EPage>(EPage.start)
     const Page = PAGES[activePage];
 
-    return <Page onChangeActivePage={setActivePage} />;
+    return <Page onChangeActivePage={setActivePage} context={context} />;
   },
 });
 

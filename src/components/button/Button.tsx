@@ -7,7 +7,7 @@ interface IButtonPops {
   children: string;
   width?: SizeString;
   height?: SizeString;
-  onClick?: () => void;
+  onPress?: () => void;
   disabled?: boolean;
 }
 
@@ -15,7 +15,7 @@ export const Button = ({
   children,
   width = "100%",
   height = "40px",
-  onClick,
+  onPress,
   disabled,
 }: IButtonPops) => {
   return (
@@ -27,7 +27,7 @@ export const Button = ({
       border="thick"
       borderColor={disabled ? THEME.colorsDisabled.blood : THEME.colors.blood}
       backgroundColor={disabled ? THEME.colorsDisabled.dark : THEME.colors.dark}
-      onPress={disabled ? undefined : onClick}>
+      onPress={disabled ? undefined : onPress}>
       <Text color={disabled ? THEME.colorsDisabled.champagne : undefined}>
         {children}
       </Text>

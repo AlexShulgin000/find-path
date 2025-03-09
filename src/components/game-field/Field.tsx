@@ -6,7 +6,7 @@ interface IFieldProps {
 
 export const Field = ({children}: IFieldProps) => {
   return (
-    <zstack width="100%" height="100%" alignment="top start">
+    <zstack width="100%" height="100%">
       <image
         imageHeight={576}
         imageWidth={768}

@@ -39,20 +39,39 @@ export const CreateGamePage = () => {
 
   const handleCreatePath = () => {
     // create. Show public your game and redirect to main page
+    //   const post = await context.reddit.submitPost({
+    //       title: 'What is this?',
+    //       subredditName: props.gameSettings.subredditName,
+    //       preview: (
+    //           <GuessScreenSkeleton
+    //               drawing={props.drawing}
+    //               dictionaryName={props.candidate.dictionaryName}
+    //           />
+    //       ),
+    //   });
+    // service.submitDrawing({
+    //     postId: post.id,
+    //     word: props.candidate.word,
+    //     dictionaryName: props.candidate.dictionaryName,
+    //     data: props.drawing,
+    //     authorUsername: props.username,
+    //     subreddit: props.gameSettings.subredditName,
+    // });
+    // context.ui.navigateTo(post);
   };
 
   const isLastRow = checkIsLastRowField(selectedPath);
 
   return (
     <Field>
-      <hstack alignment="middle center" width="100%" padding="small">
-        <Text>Create your path</Text>
-      </hstack>
       <vstack
         width="100%"
         height="100%"
         padding="medium"
         alignment="middle center">
+        <hstack alignment="middle center" width="100%" padding="small">
+          <Text>Create your path</Text>
+        </hstack>
         {selectedPath.map((row, rowIndex) => (
           <FieldRow>
             {row.map((_, cellIndex) => {
@@ -85,7 +104,7 @@ export const CreateGamePage = () => {
           </FieldRow>
         ))}
         <hstack alignment="middle center" padding="xsmall">
-          <Button disabled={!isLastRow} onClick={handleCreatePath}>
+          <Button disabled={!isLastRow} onPress={handleCreatePath}>
             Create
           </Button>
         </hstack>

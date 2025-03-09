@@ -4,9 +4,10 @@ import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
-import {TBlocks} from "../../types.js";
+import {IPageProps, TBlocks} from "../../types.js";
 import {checkIsLastRowField} from "../../utils.js";
 import {Text} from "../../components/text/Text.js";
+import {EPage} from "../../const.js";
 
 const testBlocks: TBlocks = [
   [0, null, null, null],
@@ -20,7 +21,7 @@ const testBlocks: TBlocks = [
 
 const INITIAL_COUNTER = 10;
 
-export const ShowHiddenPathPage = () => {
+export const ShowHiddenPathPage = ({onChangeActivePage}: IPageProps) => {
   const blocks = testBlocks;
   const lastStep = testBlocks[testBlocks.length - 1].reduce((acc, cell) => {
     return cell && cell > (acc ?? 0) ? cell : acc;
@@ -32,7 +33,7 @@ export const ShowHiddenPathPage = () => {
     setCounter(nextValue);
     if (nextValue === 0) {
       counterTimer.stop();
-      //     redirect
+      onChangeActivePage(EPage.game);
     }
   }, 1000);
 
@@ -41,14 +42,14 @@ export const ShowHiddenPathPage = () => {
   const isLastRow = checkIsLastRowField(blocks);
   return (
     <Field>
-      <hstack width="100%" padding="medium" alignment="middle center">
-        <Text>{`${counter}`}</Text>
-      </hstack>
       <vstack
         width="100%"
         height="100%"
         padding="medium"
         alignment="middle center">
+        <hstack width="100%" padding="medium" alignment="middle center">
+          <Text>Remember path!</Text>
+        </hstack>
         {blocks.map((row, rowIndex) => (
           <FieldRow>
             {row.map((_, cellIndex) => {
@@ -71,6 +72,9 @@ export const ShowHiddenPathPage = () => {
             })}
           </FieldRow>
         ))}
+        <hstack width="100%" padding="medium" alignment="middle center">
+          <Text size={3}>{`${counter}`}</Text>
+        </hstack>
       </vstack>
       )
     </Field>
