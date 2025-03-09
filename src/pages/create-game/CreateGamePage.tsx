@@ -9,6 +9,7 @@ import {getCreateGameAllowedSteps} from "./create-game.utils.js";
 import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
 import {Button} from "../../components/button/Button.js";
+import {checkIsLastRowField} from "../../utils.js";
 
 const getEmptyBlocks = (): TBlocks =>
   new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
@@ -40,7 +41,7 @@ export const CreateGamePage = () => {
     // create. Show public your game and redirect to main page
   };
 
-  const isLastRow = selectedPath[selectedPath.length - 1].some(cell => cell);
+  const isLastRow = checkIsLastRowField(selectedPath);
 
   return (
     <Field>
