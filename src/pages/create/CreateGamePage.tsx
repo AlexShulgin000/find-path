@@ -37,8 +37,10 @@ export const CreateGamePage = () => {
   };
 
   const handleCreatePath = () => {
-    //
+    // create. Show public your game and redirect to main page
   };
+
+  const isLastRow = selectedPath[selectedPath.length - 1].some(cell => cell);
 
   return (
     <Field>
@@ -57,6 +59,9 @@ export const CreateGamePage = () => {
               const handlePress = allowedStep
                 ? () => handleCellPress(rowIndex, cellIndex)
                 : undefined;
+              const showFirstPoint = selectedPath[rowIndex][cellIndex] === 0;
+              const showLastPoint =
+                isLastRow && selectedPath[rowIndex][cellIndex] === step;
               return (
                 <FieldBlock
                   onPress={handlePress}
@@ -66,16 +71,20 @@ export const CreateGamePage = () => {
                       ? THEME.colors.dark
                       : THEME.colors.orange
                   }>
-                  <>{allowedStep && <AllowedStep onPress={handlePress} />}</>
+                  {allowedStep && <AllowedStep onPress={handlePress} />}
+                  {(showFirstPoint || showLastPoint) && (
+                    <AllowedStep
+                      onPress={handlePress}
+                      color={THEME.colors.dark}
+                    />
+                  )}
                 </FieldBlock>
               );
             })}
           </FieldRow>
         ))}
         <hstack alignment="middle center" padding="xsmall">
-          <Button
-            disabled={!selectedPath[selectedPath.length - 1].some(cell => cell)}
-            onClick={handleCreatePath}>
+          <Button disabled={!isLastRow} onClick={handleCreatePath}>
             Create
           </Button>
         </hstack>
