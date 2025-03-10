@@ -4,26 +4,19 @@ import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
-import {IPageProps, TBlocks} from "../../types.js";
+import {IPageProps} from "../../types.js";
 import {checkIsLastRowField} from "../../utils.js";
 import {Text} from "../../components/text/Text.js";
-import {EPage} from "../../const.js";
-
-const testBlocks: TBlocks = [
-  [0, null, null, null],
-  [1, 2, 3, null],
-  [null, null, 4, null],
-  [null, 6, 5, null],
-  [8, 7, null, null],
-  [9, 10, 11, null],
-  [null, null, 12, 13],
-];
+import {EPage, GAME_DEMO_PATH} from "../../const.js";
 
 const INITIAL_COUNTER = 10;
 
-export const ShowHiddenPathPage = ({onChangeActivePage}: IPageProps) => {
-  const blocks = testBlocks;
-  const lastStep = testBlocks[testBlocks.length - 1].reduce((acc, cell) => {
+export const ShowHiddenPathPage = ({
+  onChangeActivePage,
+  gameData,
+}: IPageProps) => {
+  const path = gameData?.path ?? GAME_DEMO_PATH;
+  const lastStep = path[path.length - 1].reduce((acc, cell) => {
     return cell && cell > (acc ?? 0) ? cell : acc;
   }, null);
   const [counter, setCounter] = useState(INITIAL_COUNTER);
@@ -39,7 +32,7 @@ export const ShowHiddenPathPage = ({onChangeActivePage}: IPageProps) => {
 
   counter === INITIAL_COUNTER && counterTimer.start();
 
-  const isLastRow = checkIsLastRowField(blocks);
+  const isLastRow = checkIsLastRowField(path);
   return (
     <Field>
       <vstack
@@ -50,17 +43,17 @@ export const ShowHiddenPathPage = ({onChangeActivePage}: IPageProps) => {
         <hstack width="100%" padding="medium" alignment="middle center">
           <Text>Remember path!</Text>
         </hstack>
-        {blocks.map((row, rowIndex) => (
+        {path.map((row, rowIndex) => (
           <FieldRow>
             {row.map((_, cellIndex) => {
-              const showFirstPoint = blocks[rowIndex][cellIndex] === 0;
+              const showFirstPoint = path[rowIndex][cellIndex] === 0;
               const showLastPoint =
-                isLastRow && blocks[rowIndex][cellIndex] === lastStep;
+                isLastRow && path[rowIndex][cellIndex] === lastStep;
               return (
                 <FieldBlock
                   rowIndex={rowIndex}
                   backgroundColor={
-                    blocks[rowIndex][cellIndex] === null
+                    path[rowIndex][cellIndex] === null
                       ? THEME.colors.dark
                       : THEME.colors.orange
                   }>

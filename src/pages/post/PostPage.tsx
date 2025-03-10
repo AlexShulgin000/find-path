@@ -5,26 +5,26 @@ import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
 import {Button} from "../../components/button/Button.js";
-import {EPage, MAX_CELLS} from "../../const.js";
+import {
+  EPage,
+  GAME_DEMO_OPPONENT_NAME,
+  GAME_DEMO_PATH,
+  MAX_CELLS,
+} from "../../const.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 
-const testBlocks: TBlocks = [
-  [0, null, null, null],
-  [1, 2, 3, null],
-  [null, null, 4, null],
-  [null, 6, 5, null],
-  [8, 7, null, null],
-  [9, 10, 11, null],
-  [null, null, 12, 13],
-];
-const name = "AlexAlexAlexAlexAlexAlex";
-
-export const PostPage = ({context, onChangeActivePage}: IPageProps) => {
-  const blocksUp: TBlocks = [testBlocks[0], new Array(MAX_CELLS).fill(null)];
+export const PostPage = ({
+  context,
+  onChangeActivePage,
+  gameData,
+}: IPageProps) => {
+  const path = gameData?.path ?? GAME_DEMO_PATH;
+  const opponentName = gameData?.authorName ?? GAME_DEMO_OPPONENT_NAME;
+  const blocksUp: TBlocks = [path[0], new Array(MAX_CELLS).fill(null)];
   const blocksBottom: TBlocks = [
     new Array(MAX_CELLS).fill(null),
-    testBlocks[testBlocks.length - 1],
+    path[path.length - 1],
   ];
   const lastPointNumber = blocksBottom[1]?.reduce((acc, cell) => {
     return (cell ?? 0) > (acc ?? 0) ? cell : acc;
@@ -33,13 +33,13 @@ export const PostPage = ({context, onChangeActivePage}: IPageProps) => {
   const isDown420 = appWidth && appWidth <= 420;
 
   const getName = () => {
-    if (isDown420 && name.length >= 16) {
-      return `${name.slice(0, 16)}...`;
+    if (isDown420 && opponentName.length >= 16) {
+      return `${opponentName.slice(0, 16)}...`;
     }
-    if (name.length >= 24) {
-      return `${name.slice(0, 24)}...`;
+    if (opponentName.length >= 24) {
+      return `${opponentName.slice(0, 24)}...`;
     }
-    return name;
+    return opponentName;
   };
 
   const handelGuessPress = () => {

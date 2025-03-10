@@ -43,13 +43,15 @@ Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
   render: context => {
-    // TODO remove author ?
-    const {isError, isLoading, gameData, subreddit, currentUser} =
+    const {isError, isLoading, gameData, subreddit, currentUser, post} =
       useGetInitialData(context);
-    console.log(1, gameData);
 
     const [activePage, setActivePage] = useState<EPage>(EPage.start);
-    const Page = PAGES[activePage];
+    const Page =
+      !!gameData && activePage === EPage.start
+        ? PAGES[EPage.post]
+        : PAGES[activePage];
+    console.log(1, activePage, gameData);
 
     // TODO create loading page
     if (isError || isLoading)
@@ -63,6 +65,7 @@ Devvit.addCustomPostType({
         onChangeActivePage={setActivePage}
         context={context}
         gameData={gameData}
+        post={post}
         currentUser={currentUser}
         subreddit={subreddit}
       />

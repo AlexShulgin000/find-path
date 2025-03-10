@@ -1,5 +1,6 @@
 import {useAsyncGeneric} from "./useAsyncGeneric.js";
 import {Devvit} from "@devvit/public-api";
+import {IGameData} from "../types.js";
 
 export const useGetInitialData = (context: Devvit.Context) => {
   const {
@@ -9,6 +10,7 @@ export const useGetInitialData = (context: Devvit.Context) => {
   } = useAsyncGeneric(async () => {
     return await context.reddit.getCurrentUser();
   });
+
   const {
     data: post,
     loading: loadingPost,
@@ -33,8 +35,13 @@ export const useGetInitialData = (context: Devvit.Context) => {
   } = useAsyncGeneric(
     async () => {
       if (!postId) return null;
-      console.log(88, postId);
-      return await context.redis.hGetAll(postId ?? "");
+      const res = await context.redis.hGetAll(postId);
+      if (!res || !res.path) return null;
+      return {
+        postId: res.postId,
+        authorName: res.authorName,
+        path: JSON.parse(res.path),
+      } as IGameData;
     },
     {
       depends: postId,
