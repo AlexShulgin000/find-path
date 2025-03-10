@@ -10,6 +10,7 @@ import {useStateGeneric} from "../../hooks/useStateGeneric.js";
 import {getHeroAllowedSteps} from "./game.utils.js";
 import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
+import {SCORE_MULTIPLIER} from "../../const.js";
 
 // x | | |
 // x x x |
@@ -37,7 +38,6 @@ enum ECheckStatus {
   fail = "fail",
 }
 
-// TODO add timer 100 / 6s. in Finall send time in stat
 export const GamePage = ({onChangeActivePage, context}: IPageProps) => {
   const opponentName = GAME_DEMO_OPPONENT_NAME;
   // TODO transfrom to Set with useStateGeneric ?
@@ -49,11 +49,17 @@ export const GamePage = ({onChangeActivePage, context}: IPageProps) => {
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
   const heroAllowedSteps = getHeroAllowedSteps(testBlocks, heroPosition);
   const isLastRow = testBlocks.length - 1 === heroPosition?.rowIndex;
+  const [time] = useState(Date.now());
 
   const finalCheckStep = useInterval(() => {
     finalCheckStep.stop();
     if (checkingStatus === ECheckStatus.fail) {
-      // add fail timer 300 ->  show lose screen -> onChangeActivePage()
+      // show lose screen -> onChangeActivePage()
+    } else if (checkingStatus === ECheckStatus.success) {
+      const passedTime = +((Date.now() - time) / 1000).toFixed(2);
+      const score = SCORE_MULTIPLIER / passedTime;
+      console.log(123, passedTime, score);
+      // send success and wait, then redirect
     } else {
       setCheckingStatus(ECheckStatus.idle);
     }
@@ -101,12 +107,12 @@ export const GamePage = ({onChangeActivePage, context}: IPageProps) => {
   };
 
   const appWidth = context.dimensions?.width;
-  const isDown600 = appWidth && appWidth <= 600;
+  const isDown633 = appWidth && appWidth <= 633;
   // TODO try to write text by vertically width each letter
   const isDown515 = appWidth && appWidth <= 515;
   const getName = () => {
-    if (isDown600 && opponentName.length >= 10) {
-      return `${opponentName.slice(0, 10)}...`;
+    if (isDown633 && opponentName.length >= 14) {
+      return `${opponentName.slice(0, 14)}...`;
     }
     if (opponentName.length >= 18) {
       return `${opponentName.slice(0, 18)}...`;
@@ -124,7 +130,8 @@ export const GamePage = ({onChangeActivePage, context}: IPageProps) => {
       {isDown515 ? null : (
         <>
           <vstack width="100%" padding="medium">
-            <Text>You are against</Text>
+            <Text>You VS</Text>
+            <spacer size="small" />
           </vstack>
           <vstack alignment="end" width="100%" padding="medium">
             <Text color={THEME.colors.blood}>{getName()}</Text>

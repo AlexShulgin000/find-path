@@ -5,10 +5,19 @@ import {Stat} from "../../components/stat/Stat.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 import {Button} from "../../components/button/Button.js";
 import {IPageProps} from "../../types.js";
+import {EPage} from "../../const.js";
 
-export const GameStatFail = ({context}: IPageProps) => {
+export const GameStatFail = ({context, onChangeActivePage}: IPageProps) => {
   const appWidth = context.dimensions?.width;
   const isDown470 = appWidth && appWidth <= 470;
+
+  const handleCreatePath = () => {
+    onChangeActivePage(EPage.createGame);
+  };
+
+  const handleRetry = () => {
+    onChangeActivePage(EPage.showHiddenPath);
+  };
 
   return (
     <TorchScene>
@@ -28,10 +37,10 @@ export const GameStatFail = ({context}: IPageProps) => {
       ) : (
         <hstack width="100%" padding="medium" gap="medium">
           <hstack width="50%">
-            <Button>Create own</Button>
+            <Button onPress={handleCreatePath}>Create path</Button>
           </hstack>
           <hstack width="50%">
-            <Button>Retry</Button>
+            <Button onPress={handleRetry}>Retry</Button>
           </hstack>
         </hstack>
       )}

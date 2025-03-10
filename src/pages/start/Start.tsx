@@ -65,7 +65,7 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
         <Button onPress={handleGuess}>Guess</Button>
         {/* TODO it can be only on main widjet, or after lose/success game */}
         <Button onPress={handleCreate}>Create</Button>
-        <Button onPress={handleShowLeaderTable}>Show leaders</Button>
+        <Button onPress={handleShowLeaderTable}>Leaderboard</Button>
       </vstack>
     </TorchScene>
   );

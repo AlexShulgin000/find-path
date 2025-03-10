@@ -1,6 +1,7 @@
 // Learn more at developers.reddit.com/docs
-import {Devvit, useState} from "@devvit/public-api";
+import {Devvit, Post, useAsync, User, useState} from "@devvit/public-api";
 import {EPage, PAGES} from "./const.js";
+import {Text} from "./components/text/Text.js";
 
 Devvit.configure({
   redditAPI: true,
@@ -40,9 +41,39 @@ Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
   render: context => {
-    const [activePage, setActivePage] = useState<EPage>(EPage.gameVictory);
+    const {data, loading, error} = useAsync<User | undefined>(async () => {
+      return await context.reddit.getCurrentUser();
+    });
+    const {data: post, loading: loadingPost} = useAsync<Post | undefined>(
+      async () => {
+        return await context.reddit.getPostById(context.postId ?? "");
+      },
+    );
+    const authorId = post?.authorId;
+    const {data: author, loading: authorLoading} = useAsync<User | undefined>(
+      async () => {
+        if (!authorId) return null;
+        return await context.reddit.getUserById(authorId);
+      },
+      {
+        depends: authorId,
+      },
+    );
+    console.log(1111111);
+    console.log(1, data);
+    console.log(2, post?.authorId);
+    console.log(3, author);
+
+    const [activePage, setActivePage] = useState<EPage>(EPage.game);
     const Page = PAGES[activePage];
 
+    // TODO create loading page
+    if (!data || loading)
+      return (
+        <vstack width="100%" height="100%" alignment="middle center">
+          <Text>Loading...</Text>
+        </vstack>
+      );
     return <Page onChangeActivePage={setActivePage} context={context} />;
   },
 });

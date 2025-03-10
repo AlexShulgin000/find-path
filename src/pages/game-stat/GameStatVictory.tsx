@@ -5,8 +5,13 @@ import {Stat} from "../../components/stat/Stat.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 import {Button} from "../../components/button/Button.js";
 import {IPageProps} from "../../types.js";
+import {EPage} from "../../const.js";
 
-export const GameStatVictory = ({context}: IPageProps) => {
+export const GameStatVictory = ({context, onChangeActivePage}: IPageProps) => {
+  const handleCreatePath = () => {
+    onChangeActivePage(EPage.createGame);
+  };
+
   return (
     <TorchScene>
       <Text size={5} color={THEME.colors.champagne}>
@@ -14,7 +19,7 @@ export const GameStatVictory = ({context}: IPageProps) => {
       </Text>
       <Stat context={context} />
       <hstack padding="small" width="100%">
-        <Button>Create own</Button>
+        <Button onPress={handleCreatePath}>Create path</Button>
       </hstack>
     </TorchScene>
   );
