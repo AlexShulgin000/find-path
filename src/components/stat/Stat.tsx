@@ -17,10 +17,9 @@ const currentUserResult = {id: 99, name: "Alex Shulgin", time: 22};
 
 interface IStatProps {
   context: Devvit.Context;
-  isLeaderboard?: boolean;
 }
 
-export const Stat = ({context, isLeaderboard}: IStatProps) => {
+export const Stat = ({context}: IStatProps) => {
   const shownLeaders = leaders.slice(0, 5);
   const isCurrentUserInLeaders = shownLeaders.some(
     leader => leader.id === currentUser.id,

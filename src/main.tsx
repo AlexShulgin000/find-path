@@ -23,7 +23,7 @@ Devvit.addMenuItem({
     );
 
     const subreddit = await reddit.getCurrentSubreddit();
-    console.log(1, subreddit);
+    console.log(666, subreddit);
     const post = await reddit.submitPost({
       title: "My devvit post",
       subredditName: subreddit.name,
@@ -49,13 +49,13 @@ Devvit.addCustomPostType({
 
     const [activePage, setActivePage] = useState<EPage>(EPage.start);
     const Page =
-      gameData?.postId === GAME_DEMO_POST_KEY && activePage === EPage.start
+      gameData?.postId !== GAME_DEMO_POST_KEY && activePage === EPage.start
         ? PAGES[EPage.post]
         : PAGES[activePage];
-    console.log(1, activePage, gameData);
+    console.log(1, isError, activePage, gameData);
 
     // TODO create loading page
-    if (isError || isLoading || !gameData || !currentUser || !subreddit)
+    if (isError || isLoading || !gameData || !currentUser)
       return (
         <vstack width="100%" height="100%" alignment="middle center">
           <Text>Loading 999...</Text>

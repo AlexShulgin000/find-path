@@ -26,19 +26,27 @@ export class DataService {
     return `time_${postId}`;
   }
 
-  async setUserVictoryPost(time: number, score: number) {
-    const postId = this.post?.id ?? this.gameData.postId;
-    await this.context.redis.hSet(this.getUserPostKey(postId), {
-      time: `${time}`,
-      score: `${score}`,
-      userId: this.currentUser.id,
+  private getPostId() {
+    return this.post?.id ?? this.gameData.postId;
+  }
+
+  async setUserVictoryPost(time: number) {
+    await this.context.redis.zAdd(this.getUserPostKey(this.getPostId()), {
+      score: time,
+      member: this.currentUser.username,
     });
   }
 
-  async getLeadersPost(postId: string) {
-    return await this.context.redis.zRange(this.getUserPostKey(postId), 0, 5, {
-      by: "score",
-    });
+  async getLeadersPost() {
+    return await this.context.redis.zRange(
+      this.getUserPostKey(this.getPostId()),
+      0,
+      5,
+      {
+        by: "score",
+        reverse: true,
+      },
+    );
   }
 
   async getLeaderboard() {

@@ -46,11 +46,12 @@ export const CreateGamePage = ({
       title: "Find Path!",
       subredditName: subreddit?.name ?? "",
       // TODO replace Loading page
-      preview: <Text>Loading...</Text>,
+      preview: <Text>Loading 8...</Text>,
     });
     const postId = post.id;
     await context.redis.hSet(postId, {
       postId: post.id,
+      // TODO remove authorName, set userId and get name by userId in start
       authorName: currentUser?.username ?? "",
       // TODO create function to check path is corrected
       path: JSON.stringify(selectedPath),

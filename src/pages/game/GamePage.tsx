@@ -50,7 +50,7 @@ export const GamePage = ({
       const score = SCORE_MULTIPLIER / passedTime;
       console.log(2, passedTime, score);
       // TODO add ui loading?
-      await dataService.setUserVictoryPost(time, score);
+      await dataService.setUserVictoryPost(time);
       await dataService.increaseUserVictoryLeaderboard(score);
       onChangeActivePage(EPage.gameVictory);
     } else {

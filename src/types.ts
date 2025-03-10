@@ -16,7 +16,7 @@ export interface IPageProps {
   context: Devvit.Context;
   gameData: IGameData;
   currentUser: User;
-  subreddit: Subreddit;
+  subreddit: Subreddit | null;
   post: Post | null;
 }
 

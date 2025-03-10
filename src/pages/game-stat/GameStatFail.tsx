@@ -6,8 +6,25 @@ import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 import {Button} from "../../components/button/Button.js";
 import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
+import {DataService} from "../../services/DataService.js";
+import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
 
-export const GameStatFail = ({context, onChangeActivePage}: IPageProps) => {
+export const GameStatFail = ({
+  context,
+  onChangeActivePage,
+  gameData,
+  currentUser,
+  post,
+}: IPageProps) => {
+  const dataService = new DataService({context, gameData, currentUser, post});
+  const {
+    data: leaders,
+    loading,
+    error,
+  } = useAsyncGeneric(async () => {
+    return dataService.getLeadersPost();
+  });
+  console.log(6, leaders);
   const appWidth = context.dimensions?.width;
   const isDown470 = appWidth && appWidth <= 470;
 
