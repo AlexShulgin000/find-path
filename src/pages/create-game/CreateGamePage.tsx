@@ -1,5 +1,5 @@
 import {Devvit, useState} from "@devvit/public-api";
-import {TBlocks} from "../../types.js";
+import {IPageProps, TBlocks} from "../../types.js";
 import {MAX_CELLS, MAX_ROWS} from "../../const.js";
 import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
@@ -14,7 +14,11 @@ import {checkIsLastRowField} from "../../utils.js";
 const getEmptyBlocks = (): TBlocks =>
   new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
 
-export const CreateGamePage = () => {
+export const CreateGamePage = ({
+  context,
+  subreddit,
+  currentUser,
+}: IPageProps) => {
   const [selectedPath, setSelectedPath] = useState<TBlocks>(getEmptyBlocks());
   const [step, setStep] = useState<null | number>(null);
   const allowedSteps = getCreateGameAllowedSteps(selectedPath, step);
@@ -37,27 +41,21 @@ export const CreateGamePage = () => {
     setStep(nextStep);
   };
 
-  const handleCreatePath = () => {
-    // create. Show public your game and redirect to main page
-    //   const post = await context.reddit.submitPost({
-    //       title: 'What is this?',
-    //       subredditName: props.gameSettings.subredditName,
-    //       preview: (
-    //           <GuessScreenSkeleton
-    //               drawing={props.drawing}
-    //               dictionaryName={props.candidate.dictionaryName}
-    //           />
-    //       ),
-    //   });
-    // service.submitDrawing({
-    //     postId: post.id,
-    //     word: props.candidate.word,
-    //     dictionaryName: props.candidate.dictionaryName,
-    //     data: props.drawing,
-    //     authorUsername: props.username,
-    //     subreddit: props.gameSettings.subredditName,
-    // });
-    // context.ui.navigateTo(post);
+  const handleCreatePath = async () => {
+    const post = await context.reddit.submitPost({
+      title: "Find Path!",
+      subredditName: subreddit?.name ?? "",
+      // TODO replace Loading page
+      preview: <Text>Loading...</Text>,
+    });
+    const postId = post.id;
+    await context.redis.hSet(postId, {
+      postId: post.id,
+      authorName: currentUser?.username ?? "",
+      // TODO create function to check path is corrected
+      path: JSON.stringify(selectedPath),
+    });
+    context.ui.navigateTo(post);
   };
 
   const isLastRow = checkIsLastRowField(selectedPath);

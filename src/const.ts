@@ -31,3 +31,5 @@ export const MAX_ROWS = 7;
 export const MAX_CELLS = 4;
 
 export const SCORE_MULTIPLIER = 100;
+
+export const DATA_KEYS = {} as const;

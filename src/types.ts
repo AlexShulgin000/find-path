@@ -1,5 +1,5 @@
 import {EPage} from "./const.js";
-import {Devvit} from "@devvit/public-api";
+import {Devvit, Subreddit, User} from "@devvit/public-api";
 
 type SizePixels = `${number}px`;
 type SizePercent = `${number}%`;
@@ -14,6 +14,9 @@ export type ContainerCornerRadius =
 export interface IPageProps {
   onChangeActivePage: (page: EPage) => void;
   context: Devvit.Context;
+  gameData: any;
+  currentUser: User | null;
+  subreddit: Subreddit | null;
 }
 
 export type TBlock = number | null;
