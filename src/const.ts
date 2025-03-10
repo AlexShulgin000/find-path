@@ -1,5 +1,5 @@
 import {StartPage} from "./pages/start/Start.js";
-import {IPageProps, TBlocks} from "./types.js";
+import {IGameData, IPageProps, TBlocks} from "./types.js";
 import {GamePage} from "./pages/game/GamePage.js";
 import {CreateGamePage} from "./pages/create-game/CreateGamePage.js";
 import {ShowHiddenPathPage} from "./pages/show-hidden-path/ShowHiddenPathPage.js";
@@ -33,8 +33,7 @@ export const MAX_CELLS = 4;
 export const SCORE_MULTIPLIER = 100;
 
 export const DATA_KEYS = {
-  score: "score",
-  time: "time",
+  leaderboard: "leaderboard",
 } as const;
 
 // x | | |
@@ -55,3 +54,11 @@ export const GAME_DEMO_PATH: TBlocks = [
 ];
 
 export const GAME_DEMO_OPPONENT_NAME = "Alex Shulgin";
+
+export const GAME_DEMO_POST_KEY = "GAME_DEMO_POST_KEY";
+
+export const GAME_DEMO_DATA: IGameData = {
+  postId: GAME_DEMO_POST_KEY,
+  authorName: GAME_DEMO_OPPONENT_NAME,
+  path: GAME_DEMO_PATH,
+};

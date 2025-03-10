@@ -5,12 +5,7 @@ import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
 import {Button} from "../../components/button/Button.js";
-import {
-  EPage,
-  GAME_DEMO_OPPONENT_NAME,
-  GAME_DEMO_PATH,
-  MAX_CELLS,
-} from "../../const.js";
+import {EPage, MAX_CELLS} from "../../const.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 
@@ -19,8 +14,8 @@ export const PostPage = ({
   onChangeActivePage,
   gameData,
 }: IPageProps) => {
-  const path = gameData?.path ?? GAME_DEMO_PATH;
-  const opponentName = gameData?.authorName ?? GAME_DEMO_OPPONENT_NAME;
+  const path = gameData.path;
+  const opponentName = gameData.authorName;
   const blocksUp: TBlocks = [path[0], new Array(MAX_CELLS).fill(null)];
   const blocksBottom: TBlocks = [
     new Array(MAX_CELLS).fill(null),

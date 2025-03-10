@@ -28,10 +28,10 @@ export const GameStatFail = ({context, onChangeActivePage}: IPageProps) => {
       {isDown470 ? (
         <>
           <hstack padding="small" width="100%">
-            <Button>Create own</Button>
+            <Button onPress={handleCreatePath}>Create path</Button>
           </hstack>
           <hstack padding="small" width="100%">
-            <Button>Retry</Button>
+            <Button onPress={handleRetry}>Retry</Button>
           </hstack>
         </>
       ) : (

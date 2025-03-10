@@ -10,13 +10,8 @@ import {useStateGeneric} from "../../hooks/useStateGeneric.js";
 import {getHeroAllowedSteps} from "./game.utils.js";
 import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
-import {
-  EPage,
-  GAME_DEMO_OPPONENT_NAME,
-  GAME_DEMO_PATH,
-  SCORE_MULTIPLIER,
-} from "../../const.js";
-import {getPostId, getPostUserTimeKey} from "../../utils.js";
+import {EPage, SCORE_MULTIPLIER} from "../../const.js";
+import {DataService} from "../../services/DataService.js";
 
 enum ECheckStatus {
   idle = "idle",
@@ -32,8 +27,9 @@ export const GamePage = ({
   post,
   currentUser,
 }: IPageProps) => {
-  const path = gameData?.path ?? GAME_DEMO_PATH;
-  const opponentName = gameData?.authorName ?? GAME_DEMO_OPPONENT_NAME;
+  const dataService = new DataService({context, gameData, post, currentUser});
+  const path = gameData.path;
+  const opponentName = gameData?.authorName;
   // TODO transfrom to Set with useStateGeneric ?
   const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
   // TODO this about it, maybe use standart. not hack
@@ -52,18 +48,10 @@ export const GamePage = ({
     } else if (checkingStatus === ECheckStatus.success) {
       const passedTime = +((Date.now() - time) / 1000).toFixed(2);
       const score = SCORE_MULTIPLIER / passedTime;
-      console.log(123, passedTime, score);
-      const postId = getPostId(post);
-      const userId = currentUser?.id;
-      if (!userId) return;
+      console.log(2, passedTime, score);
       // TODO add ui loading?
-      await context.redis.hSet(getPostUserTimeKey(postId, userId), {
-        postId,
-        userId,
-        name: currentUser?.username,
-        time: `${passedTime}`,
-      });
-      // TODO add request in leader table
+      await dataService.setUserVictoryPost(time, score);
+      await dataService.increaseUserVictoryLeaderboard(score);
       onChangeActivePage(EPage.gameVictory);
     } else {
       setCheckingStatus(ECheckStatus.idle);

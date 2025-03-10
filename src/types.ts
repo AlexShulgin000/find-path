@@ -14,9 +14,9 @@ export type ContainerCornerRadius =
 export interface IPageProps {
   onChangeActivePage: (page: EPage) => void;
   context: Devvit.Context;
-  gameData: IGameData | null;
-  currentUser: User | null;
-  subreddit: Subreddit | null;
+  gameData: IGameData;
+  currentUser: User;
+  subreddit: Subreddit;
   post: Post | null;
 }
 
@@ -35,4 +35,11 @@ export interface IGameData {
   postId: string;
   authorName: string;
   path: TBlocks;
+}
+
+export interface ILeaderboardItem {
+  userId: string;
+  name: string;
+  time: number;
+  score: number;
 }

@@ -7,7 +7,7 @@ import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {IPageProps} from "../../types.js";
 import {checkIsLastRowField} from "../../utils.js";
 import {Text} from "../../components/text/Text.js";
-import {EPage, GAME_DEMO_PATH} from "../../const.js";
+import {EPage} from "../../const.js";
 
 const INITIAL_COUNTER = 10;
 
@@ -15,7 +15,7 @@ export const ShowHiddenPathPage = ({
   onChangeActivePage,
   gameData,
 }: IPageProps) => {
-  const path = gameData?.path ?? GAME_DEMO_PATH;
+  const path = gameData.path;
   const lastStep = path[path.length - 1].reduce((acc, cell) => {
     return cell && cell > (acc ?? 0) ? cell : acc;
   }, null);

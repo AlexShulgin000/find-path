@@ -1,8 +1,11 @@
 import {useAsyncGeneric} from "./useAsyncGeneric.js";
 import {Devvit} from "@devvit/public-api";
 import {IGameData} from "../types.js";
+import {GAME_DEMO_DATA} from "../const.js";
 
 export const useGetInitialData = (context: Devvit.Context) => {
+  const postId = context.postId;
+
   const {
     data: currentUser,
     loading: currentUserLoading,
@@ -16,7 +19,8 @@ export const useGetInitialData = (context: Devvit.Context) => {
     loading: loadingPost,
     error: postError,
   } = useAsyncGeneric(async () => {
-    return await context.reddit.getPostById(context.postId ?? "");
+    if (!postId) return null;
+    return await context.reddit.getPostById(postId);
   });
 
   const {
@@ -27,7 +31,6 @@ export const useGetInitialData = (context: Devvit.Context) => {
     return await context.reddit.getCurrentSubreddit();
   });
 
-  const postId = post?.id;
   const {
     data: gameData,
     loading: gameLoading,
@@ -36,7 +39,7 @@ export const useGetInitialData = (context: Devvit.Context) => {
     async () => {
       if (!postId) return null;
       const res = await context.redis.hGetAll(postId);
-      if (!res || !res.path) return null;
+      if (!res || !res.path) return GAME_DEMO_DATA;
       return {
         postId: res.postId,
         authorName: res.authorName,

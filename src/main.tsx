@@ -1,6 +1,6 @@
 // Learn more at developers.reddit.com/docs
 import {Devvit, useState} from "@devvit/public-api";
-import {EPage, PAGES} from "./const.js";
+import {EPage, GAME_DEMO_POST_KEY, PAGES} from "./const.js";
 import {Text} from "./components/text/Text.js";
 import {useGetInitialData} from "./hooks/useGetInitialData.js";
 
@@ -38,6 +38,7 @@ Devvit.addMenuItem({
   },
 });
 
+// TODO check all pages and data with no reg user
 // Add a post type definition
 Devvit.addCustomPostType({
   name: "Find Path!",
@@ -48,13 +49,13 @@ Devvit.addCustomPostType({
 
     const [activePage, setActivePage] = useState<EPage>(EPage.start);
     const Page =
-      !!gameData && activePage === EPage.start
+      gameData?.postId === GAME_DEMO_POST_KEY && activePage === EPage.start
         ? PAGES[EPage.post]
         : PAGES[activePage];
     console.log(1, activePage, gameData);
 
     // TODO create loading page
-    if (isError || isLoading)
+    if (isError || isLoading || !gameData || !currentUser || !subreddit)
       return (
         <vstack width="100%" height="100%" alignment="middle center">
           <Text>Loading 999...</Text>
