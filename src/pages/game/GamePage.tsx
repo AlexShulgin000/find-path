@@ -127,7 +127,7 @@ export const GamePage = ({
   return (
     <Field>
       {heroPosition === null && (
-        <vstack width="100%" alignment="middle center">
+        <vstack width="100%" alignment="top center">
           <Hero />
         </vstack>
       )}

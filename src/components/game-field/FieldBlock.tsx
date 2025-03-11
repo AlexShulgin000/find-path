@@ -27,21 +27,20 @@ export const FieldBlock = ({
   backgroundColor,
 }: IFieldBlockProps) => {
   return (
-    <vstack
+    <zstack
       alignment="center middle"
       width={CELL_FULL_SIZE}
       height={CELL_FULL_SIZE}>
-      <vstack
-        alignment="center middle"
+      <zstack
         borderColor={THEME.colors.blood}
         border="thin"
         cornerRadius={CELL_RADIUS[rowIndex]}
         width={CELL_VISUAL_SIZE}
         height={CELL_VISUAL_SIZE}
         onPress={onPress}
-        backgroundColor={backgroundColor}>
-        {children ?? null}
-      </vstack>
-    </vstack>
+        backgroundColor={backgroundColor}
+      />
+      {children ?? null}
+    </zstack>
   );
 };
