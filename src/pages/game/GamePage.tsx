@@ -12,6 +12,8 @@ import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
 import {EPage, SCORE_MULTIPLIER} from "../../const.js";
 import {DataService} from "../../services/DataService.js";
+import {VerticalTextLeft} from "./components/VerticalTextLeft.js";
+import {VerticalTextRight} from "./components/VerticalTextRight.js";
 
 enum ECheckStatus {
   idle = "idle",
@@ -112,7 +114,6 @@ export const GamePage = ({
 
   const appWidth = context.dimensions?.width;
   const isDown633 = appWidth && appWidth <= 633;
-  // TODO try to write text by vertically width each letter
   const isDown515 = appWidth && appWidth <= 515;
   const getName = () => {
     if (isDown633 && opponentName.length >= 14) {
@@ -131,7 +132,12 @@ export const GamePage = ({
           <Hero />
         </vstack>
       )}
-      {isDown515 ? null : (
+      {isDown515 ? (
+        <>
+          <VerticalTextLeft />
+          <VerticalTextRight opponentName={opponentName} />
+        </>
+      ) : (
         <>
           <vstack width="100%" padding="medium">
             <Text>You VS</Text>
