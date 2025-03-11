@@ -1,27 +1,22 @@
 import {THEME} from "../../theme.js";
 import {Text} from "../text/Text.js";
 import {Devvit} from "@devvit/public-api";
-
-// TODO CHECK
-export interface ILeader {
-  id: number;
-  name: string;
-  time: number;
-}
+import {ILeaderboardCurrentUser, ILeaderboardUser} from "../../types.js";
 
 interface IStatItemProps {
-  leader: ILeader;
+  leader: ILeaderboardUser;
   context: Devvit.Context;
-  count?: number;
-  // TODO change IUser
-  currentUser: {id: number};
+  rank?: number;
+  isTime?: boolean;
+  currentUser?: ILeaderboardCurrentUser;
 }
 
 export const StatItem = ({
   context,
   leader,
-  count,
+  rank,
   currentUser,
+  isTime,
 }: IStatItemProps) => {
   const appWidth = context.dimensions?.width;
   const isDown570 = appWidth && appWidth <= 570;
@@ -57,25 +52,27 @@ export const StatItem = ({
         width="100%"
         padding="medium"
         backgroundColor={
-          currentUser.id === leader.id ? THEME.colors.champagne : "white"
+          currentUser?.name === leader.member ? THEME.colors.champagne : "white"
         }>
         <hstack>
           <Text
             size={textSize}
             color={
               THEME.colors.dark
-            }>{`${isDown420 || !count ? "" : `${count}. `}${getName(leader.name)}`}</Text>
+            }>{`${isDown420 || !rank ? "" : `${rank}. `}${getName(leader.member)}`}</Text>
         </hstack>
         <hstack alignment="end bottom" grow>
           <Text
             size={textSize}
             color={
               THEME.colors.dark
-            }>{`${leader.time > 99 ? "99+" : leader.time}`}</Text>
+            }>{`${leader.score > 99 ? "99+" : leader.score}`}</Text>
           <hstack width="3px" />
-          <Text
-            color={THEME.colors.dark}
-            size={isDown470 ? 1 : 1.5}>{`s`}</Text>
+          {!!isTime && (
+            <Text
+              color={THEME.colors.dark}
+              size={isDown470 ? 1 : 1.5}>{`s`}</Text>
+          )}
         </hstack>
       </hstack>
     </>

@@ -1,5 +1,5 @@
 import {EPage} from "./const.js";
-import {Devvit, Post, Subreddit, User} from "@devvit/public-api";
+import {Devvit, Subreddit, User} from "@devvit/public-api";
 
 type SizePixels = `${number}px`;
 type SizePercent = `${number}%`;
@@ -17,7 +17,6 @@ export interface IPageProps {
   gameData: IGameData;
   currentUser: User;
   subreddit: Subreddit | null;
-  post: Post | null;
 }
 
 export type TBlock = number | null;
@@ -37,9 +36,13 @@ export interface IGameData {
   path: TBlocks;
 }
 
-export interface ILeaderboardItem {
-  userId: string;
+export interface ILeaderboardUser {
+  member: string;
+  score: number;
+}
+
+export interface ILeaderboardCurrentUser {
   name: string;
-  time: number;
+  rank: number;
   score: number;
 }

@@ -17,6 +17,7 @@ enum ECheckStatus {
   idle = "idle",
   wait = "wait",
   success = "success",
+  victory = "victory",
   fail = "fail",
 }
 
@@ -24,35 +25,46 @@ export const GamePage = ({
   onChangeActivePage,
   context,
   gameData,
-  post,
   currentUser,
 }: IPageProps) => {
-  const dataService = new DataService({context, gameData, post, currentUser});
+  const dataService = new DataService({context, gameData, currentUser});
   const path = gameData.path;
   const opponentName = gameData?.authorName;
   // TODO transfrom to Set with useStateGeneric ?
   const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
-  // TODO this about it, maybe use standart. not hack
   const [heroPosition, setHeroPosition] = useStateGeneric<IHeroPosition | null>(
     null,
   );
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
   const heroAllowedSteps = getHeroAllowedSteps(path, heroPosition);
-  const isLastRow = path.length - 1 === heroPosition?.rowIndex;
   const [time] = useState(Date.now());
+
+  const handleSuccess = async () => {
+    const finalStep = path[path.length - 1].reduce(
+      (acc, cell) => ((cell ?? 0) > (acc ?? 0) ? cell : acc),
+      0,
+    );
+    if (
+      heroPosition &&
+      finalStep === path[heroPosition.rowIndex][heroPosition?.cellIndex]
+    ) {
+      setCheckingStatus(ECheckStatus.victory);
+      const passedTime = +((Date.now() - time) / 1000).toFixed(2);
+      const score = +(SCORE_MULTIPLIER / passedTime).toFixed(2);
+      await dataService.setUserVictoryPost(passedTime);
+      await dataService.increaseUserVictoryLeaderboard(score);
+      onChangeActivePage(EPage.gameVictory);
+    } else {
+      setCheckingStatus(ECheckStatus.idle);
+    }
+  };
 
   const finalCheckStep = useInterval(async () => {
     finalCheckStep.stop();
     if (checkingStatus === ECheckStatus.fail) {
       onChangeActivePage(EPage.gameFail);
     } else if (checkingStatus === ECheckStatus.success) {
-      const passedTime = +((Date.now() - time) / 1000).toFixed(2);
-      const score = SCORE_MULTIPLIER / passedTime;
-      console.log(2, passedTime, score);
-      // TODO add ui loading?
-      await dataService.setUserVictoryPost(time);
-      await dataService.increaseUserVictoryLeaderboard(score);
-      onChangeActivePage(EPage.gameVictory);
+      await handleSuccess();
     } else {
       setCheckingStatus(ECheckStatus.idle);
     }
@@ -68,7 +80,7 @@ export const GamePage = ({
   }, 600);
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
-    if (checkingStatus !== ECheckStatus.idle || isLastRow) return;
+    if (checkingStatus !== ECheckStatus.idle) return;
     heroPosition &&
       setPassedPath(prev => ({
         ...prev,
@@ -146,7 +158,6 @@ export const GamePage = ({
                 heroPosition?.rowIndex === rowIndex &&
                 heroPosition?.cellIndex === cellIndex;
               const isCellHasAllowedStep =
-                isLastRow ||
                 (heroPosition === null && rowIndex === 0) ||
                 (checkingStatus === ECheckStatus.idle &&
                   heroAllowedSteps[rowIndex]?.has(cellIndex));
@@ -171,6 +182,15 @@ export const GamePage = ({
           </FieldRow>
         ))}
       </vstack>
+      {checkingStatus === ECheckStatus.victory && (
+        <vstack
+          width="100%"
+          height="100%"
+          padding="small"
+          alignment="center bottom">
+          <Text color={THEME.colors.champagne}>VICTORY</Text>
+        </vstack>
+      )}
     </Field>
   );
 };

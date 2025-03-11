@@ -8,23 +8,18 @@ import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
 import {DataService} from "../../services/DataService.js";
 import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
+import {LoadingPage} from "../loading/LoadingPage.js";
 
 export const GameStatFail = ({
   context,
   onChangeActivePage,
   gameData,
   currentUser,
-  post,
 }: IPageProps) => {
-  const dataService = new DataService({context, gameData, currentUser, post});
-  const {
-    data: leaders,
-    loading,
-    error,
-  } = useAsyncGeneric(async () => {
-    return dataService.getLeadersPost();
+  const dataService = new DataService({context, gameData, currentUser});
+  const {data: leaders} = useAsyncGeneric(async () => {
+    return dataService.getPostLeaders();
   });
-  console.log(6, leaders);
   const appWidth = context.dimensions?.width;
   const isDown470 = appWidth && appWidth <= 470;
 
@@ -36,12 +31,15 @@ export const GameStatFail = ({
     onChangeActivePage(EPage.showHiddenPath);
   };
 
+  if (!leaders) {
+    return <LoadingPage />;
+  }
   return (
     <TorchScene>
       <Text size={5} color={THEME.colors.blood}>
         FAIL
       </Text>
-      <Stat context={context} />
+      <Stat context={context} leaders={leaders} />
       {isDown470 ? (
         <>
           <hstack padding="small" width="100%">

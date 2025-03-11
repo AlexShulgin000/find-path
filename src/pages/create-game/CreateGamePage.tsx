@@ -10,6 +10,7 @@ import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
 import {Button} from "../../components/button/Button.js";
 import {checkIsLastRowField} from "../../utils.js";
+import {LoadingPage} from "../loading/LoadingPage.js";
 
 const getEmptyBlocks = (): TBlocks =>
   new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
@@ -21,6 +22,7 @@ export const CreateGamePage = ({
 }: IPageProps) => {
   const [selectedPath, setSelectedPath] = useState<TBlocks>(getEmptyBlocks());
   const [step, setStep] = useState<null | number>(null);
+  const [loading, setLoading] = useState(false);
   const allowedSteps = getCreateGameAllowedSteps(selectedPath, step);
 
   const handleCellPress = (newRowIndex: number, newCellIndex: number) => {
@@ -42,18 +44,16 @@ export const CreateGamePage = ({
   };
 
   const handleCreatePath = async () => {
+    setLoading(true);
     const post = await context.reddit.submitPost({
       title: "Find Path!",
       subredditName: subreddit?.name ?? "",
-      // TODO replace Loading page
-      preview: <Text>Loading 8...</Text>,
+      preview: <LoadingPage />,
     });
     const postId = post.id;
     await context.redis.hSet(postId, {
       postId: post.id,
-      // TODO remove authorName, set userId and get name by userId in start
       authorName: currentUser?.username ?? "",
-      // TODO create function to check path is corrected
       path: JSON.stringify(selectedPath),
     });
     context.ui.navigateTo(post);
@@ -103,8 +103,8 @@ export const CreateGamePage = ({
           </FieldRow>
         ))}
         <hstack alignment="middle center" padding="xsmall">
-          <Button disabled={!isLastRow} onPress={handleCreatePath}>
-            Create
+          <Button disabled={!isLastRow || loading} onPress={handleCreatePath}>
+            {loading ? `Creating...` : "Create"}
           </Button>
         </hstack>
       </vstack>

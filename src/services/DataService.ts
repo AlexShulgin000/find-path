@@ -1,68 +1,76 @@
-import {Devvit, Post, User} from "@devvit/public-api";
-import {IGameData} from "../types.js";
+import {Devvit, User} from "@devvit/public-api";
+import {IGameData, ILeaderboardCurrentUser} from "../types.js";
 import {DATA_KEYS} from "../const.js";
 
 interface IDataServiceProps {
   context: Devvit.Context;
   currentUser: User;
-  post: Post | null;
   gameData: IGameData;
 }
 
 export class DataService {
   private context: IDataServiceProps["context"];
   private gameData: IDataServiceProps["gameData"];
-  private post: IDataServiceProps["post"];
   private currentUser: IDataServiceProps["currentUser"];
+  private readonly postId: string;
 
-  constructor({context, gameData, post, currentUser}: IDataServiceProps) {
+  constructor({context, gameData, currentUser}: IDataServiceProps) {
     this.context = context;
     this.gameData = gameData;
-    this.post = post;
     this.currentUser = currentUser;
+    this.postId = this.gameData.postId;
   }
 
-  private getUserPostKey(postId: string) {
-    return `time_${postId}`;
-  }
-
-  private getPostId() {
-    return this.post?.id ?? this.gameData.postId;
+  // post
+  private getUserPostKey() {
+    return `post_leaders_${this.postId}`;
   }
 
   async setUserVictoryPost(time: number) {
-    await this.context.redis.zAdd(this.getUserPostKey(this.getPostId()), {
+    return await this.context.redis.zAdd(this.getUserPostKey(), {
       score: time,
       member: this.currentUser.username,
     });
   }
 
-  async getLeadersPost() {
-    return await this.context.redis.zRange(
-      this.getUserPostKey(this.getPostId()),
-      0,
-      5,
-      {
-        by: "score",
-        reverse: true,
-      },
-    );
+  async getPostLeaders() {
+    return await this.context.redis.zRange(this.getUserPostKey(), 0, 5, {
+      by: "rank",
+      reverse: true,
+    });
   }
 
+  // TODO create the same for leaderboard
+  async getCurrentUserFromLeaders() {
+    const [rank, score] = await Promise.all([
+      this.context.redis.zRank(
+        this.getUserPostKey(),
+        this.currentUser.username,
+      ),
+      this.context.redis.zScore(
+        this.getUserPostKey(),
+        this.currentUser.username,
+      ),
+    ]);
+    return {
+      name: this.currentUser.username,
+      rank: rank ?? 0,
+      score: score ?? 0,
+    } as ILeaderboardCurrentUser;
+  }
+
+  // leaderboard
   async getLeaderboard() {
     return await this.context.redis.zRange(DATA_KEYS.leaderboard, 0, 5, {
-      by: "score",
+      by: "rank",
     });
   }
 
   async increaseUserVictoryLeaderboard(score: number) {
-    // tODO check, working with new user?
-    const res = await this.context.redis.hIncrBy(
+    return await this.context.redis.hIncrBy(
       DATA_KEYS.leaderboard,
       this.currentUser.id,
       score,
     );
-    console.log(999, res);
-    return res;
   }
 }

@@ -8,34 +8,40 @@ import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
 import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
 import {DataService} from "../../services/DataService.js";
+import {LoadingPage} from "../loading/LoadingPage.js";
 
 export const GameStatVictory = ({
   context,
   onChangeActivePage,
   gameData,
   currentUser,
-  post,
 }: IPageProps) => {
-  const dataService = new DataService({context, gameData, currentUser, post});
-  const {
-    data: leaders,
-    loading,
-    error,
-  } = useAsyncGeneric(async () => {
-    return dataService.getLeadersPost();
+  const dataService = new DataService({context, gameData, currentUser});
+  const {data: leaders} = useAsyncGeneric(async () => {
+    return await dataService.getPostLeaders();
   });
-  console.log(5, leaders);
+  const {data: currentUserFromLeaders} = useAsyncGeneric(async () => {
+    return await dataService.getCurrentUserFromLeaders();
+  });
 
   const handleCreatePath = () => {
     onChangeActivePage(EPage.createGame);
   };
 
+  if (!leaders || !currentUserFromLeaders) {
+    return <LoadingPage />;
+  }
   return (
     <TorchScene>
       <Text size={5} color={THEME.colors.champagne}>
         Victory!!!
       </Text>
-      <Stat context={context} />
+      <Stat
+        context={context}
+        leaders={leaders}
+        isTime
+        currentUser={currentUserFromLeaders}
+      />
       <hstack padding="small" width="100%">
         <Button onPress={handleCreatePath}>Create path</Button>
       </hstack>

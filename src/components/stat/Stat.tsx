@@ -1,28 +1,19 @@
 import {Devvit} from "@devvit/public-api";
 import {Text} from "../text/Text.js";
 import {StatItem} from "./StatItem.js";
-
-const leaders = [
-  {id: 1, name: "Jar Hilo", time: 12},
-  {id: 2, name: "Hert JiopqwwwHert Jiopqw1", time: 16.5},
-  {id: 99, name: "Alex Shulgin", time: 22},
-];
-
-const currentUser = {
-  id: 99,
-  name: "Alex Shulgin",
-};
-
-const currentUserResult = {id: 99, name: "Alex Shulgin", time: 22};
+import {ILeaderboardCurrentUser, ILeaderboardUser} from "../../types.js";
 
 interface IStatProps {
   context: Devvit.Context;
+  isTime?: boolean;
+  leaders: ILeaderboardUser[];
+  currentUser?: ILeaderboardCurrentUser;
 }
 
-export const Stat = ({context}: IStatProps) => {
+export const Stat = ({context, isTime, leaders, currentUser}: IStatProps) => {
   const shownLeaders = leaders.slice(0, 5);
   const isCurrentUserInLeaders = shownLeaders.some(
-    leader => leader.id === currentUser.id,
+    leader => leader.member === currentUser?.name,
   );
   const appWidth = context.dimensions?.width;
   const isDown470 = appWidth && appWidth <= 470;
@@ -31,22 +22,24 @@ export const Stat = ({context}: IStatProps) => {
     <vstack width="100%" padding={isDown470 ? "small" : "medium"}>
       {shownLeaders.map((leader, i) => (
         <StatItem
-          count={i + 1}
+          rank={i + 1}
           currentUser={currentUser}
           leader={leader}
           context={context}
+          isTime={isTime}
         />
       ))}
-      {!isCurrentUserInLeaders && currentUserResult && (
+      {!!(!isCurrentUserInLeaders && currentUser) && (
         <>
           <hstack width="100%" padding="medium">
             <Text>...</Text>
           </hstack>
-          {/* TODO How to recalculate place for users. count is empty now */}
           <StatItem
             currentUser={currentUser}
-            leader={currentUserResult}
+            leader={{member: currentUser.name, score: currentUser.score}}
+            rank={currentUser.rank}
             context={context}
+            isTime={isTime}
           />
           )
         </>

@@ -4,23 +4,12 @@ import {IGameData} from "../types.js";
 import {GAME_DEMO_DATA} from "../const.js";
 
 export const useGetInitialData = (context: Devvit.Context) => {
-  const postId = context.postId;
-
   const {
     data: currentUser,
     loading: currentUserLoading,
     error: currentUserError,
   } = useAsyncGeneric(async () => {
     return await context.reddit.getCurrentUser();
-  });
-
-  const {
-    data: post,
-    loading: loadingPost,
-    error: postError,
-  } = useAsyncGeneric(async () => {
-    if (!postId) return null;
-    return await context.reddit.getPostById(postId);
   });
 
   const {
@@ -31,6 +20,7 @@ export const useGetInitialData = (context: Devvit.Context) => {
     return await context.reddit.getCurrentSubreddit();
   });
 
+  const postId = context.postId;
   const {
     data: gameData,
     loading: gameLoading,
@@ -52,12 +42,10 @@ export const useGetInitialData = (context: Devvit.Context) => {
   );
 
   return {
-    post: post ?? null,
     currentUser: currentUser ?? null,
     gameData: gameData ?? null,
     subreddit: subreddit ?? null,
-    isLoading:
-      currentUserLoading || loadingPost || gameLoading || subredditLoading,
-    isError: !!(currentUserError || postError || gameError || subredditError),
+    isLoading: currentUserLoading || gameLoading || subredditLoading,
+    isError: !!(currentUserError || gameError || subredditError),
   };
 };
