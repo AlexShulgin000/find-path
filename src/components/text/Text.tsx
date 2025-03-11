@@ -42,6 +42,7 @@ export const Text = ({
     characters.push(`<path
       d="${glyph.path}"
       transform="translate(${xOffset} 0)"
+      fill="${color}"
       fill-rule="evenodd"
       clip-rule="evenodd"
     />`);

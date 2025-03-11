@@ -41,7 +41,7 @@ export class DataService {
   }
 
   // TODO create the same for leaderboard
-  async getCurrentUserFromLeaders() {
+  async getCurrentUserFromPostLeaders() {
     const [rank, score] = await Promise.all([
       this.context.redis.zRank(
         this.getUserPostKey(),

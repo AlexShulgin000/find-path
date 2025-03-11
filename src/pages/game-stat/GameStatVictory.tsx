@@ -21,7 +21,7 @@ export const GameStatVictory = ({
     return await dataService.getPostLeaders();
   });
   const {data: currentUserFromLeaders} = useAsyncGeneric(async () => {
-    return await dataService.getCurrentUserFromLeaders();
+    return await dataService.getCurrentUserFromPostLeaders();
   });
 
   const handleCreatePath = () => {

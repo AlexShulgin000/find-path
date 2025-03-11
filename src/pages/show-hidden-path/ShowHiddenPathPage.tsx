@@ -3,11 +3,11 @@ import {Devvit, useInterval, useState} from "@devvit/public-api";
 import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
-import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {IPageProps} from "../../types.js";
 import {checkIsLastRowField} from "../../utils.js";
-import {Text} from "../../components/text/Text.js";
 import {EPage} from "../../const.js";
+import {Text} from "../../components/text/Text.js";
+import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 
 const INITIAL_COUNTER = 10;
 
@@ -36,6 +36,7 @@ export const ShowHiddenPathPage = ({
   return (
     <Field>
       <vstack
+        grow
         width="100%"
         height="100%"
         padding="medium"

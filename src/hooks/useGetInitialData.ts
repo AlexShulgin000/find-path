@@ -41,6 +41,27 @@ export const useGetInitialData = (context: Devvit.Context) => {
     },
   );
 
+  // const {
+  //   data: completedGameData,
+  //   loading: completedGameLoading,
+  //   error: completedGameError,
+  // } = useAsyncGeneric(
+  //   async () => {
+  //     if (!gameData || !currentUser) return null;
+  //     // TODO optimise we dont need gameData here
+  //     const dataService = new DataService({context, gameData, currentUser});
+  //     const res = await dataService.getCurrentUserFromPostLeaders();
+  //     if (res.rank && res.score) {
+  //       return res;
+  //     }
+  //     return null;
+  //   },
+  //   {
+  //     depends: [gameData?.postId ?? null, currentUser?.id ?? null],
+  //   },
+  // );
+  // console.log(99, completedGameData);
+
   return {
     currentUser: currentUser ?? null,
     gameData: gameData ?? null,

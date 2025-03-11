@@ -63,7 +63,6 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
       </hstack>
       <vstack width="40%" gap="small" minWidth="240px">
         <Button onPress={handleGuess}>Guess</Button>
-        {/* TODO it can be only on main widjet, or after lose/success game */}
         <Button onPress={handleCreate}>Create</Button>
         <Button onPress={handleShowLeaderTable}>Leaderboard</Button>
       </vstack>
