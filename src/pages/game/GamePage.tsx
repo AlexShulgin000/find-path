@@ -11,9 +11,9 @@ import {getHeroAllowedSteps} from "./game.utils.js";
 import {Field} from "../../components/game-field/Field.js";
 import {Text} from "../../components/text/Text.js";
 import {EPage, SCORE_MULTIPLIER} from "../../const.js";
-import {DataService} from "../../services/DataService.js";
 import {VerticalTextLeft} from "./components/VerticalTextLeft.js";
 import {VerticalTextRight} from "./components/VerticalTextRight.js";
+import {LeadersDataService} from "../../services/LeadersDataService.js";
 
 enum ECheckStatus {
   idle = "idle",
@@ -29,7 +29,6 @@ export const GamePage = ({
   gameData,
   currentUser,
 }: IPageProps) => {
-  const dataService = new DataService({context, gameData, currentUser});
   const path = gameData.path;
   const opponentName = gameData?.authorName;
   // TODO transfrom to Set with useStateGeneric ?
@@ -53,8 +52,14 @@ export const GamePage = ({
       setCheckingStatus(ECheckStatus.victory);
       const passedTime = +((Date.now() - time) / 1000).toFixed(2);
       const score = +(SCORE_MULTIPLIER / passedTime).toFixed(2);
-      await dataService.setUserVictoryPost(passedTime);
-      await dataService.increaseUserVictoryLeaderboard(score, passedTime);
+      await LeadersDataService.setUserVictoryPost(
+        {currentUser, context},
+        {time: passedTime},
+      );
+      await LeadersDataService.increaseUserVictoryLeaderboard(
+        {context, currentUser},
+        {score, time: passedTime},
+      );
       onChangeActivePage(EPage.gameVictory);
     } else {
       setCheckingStatus(ECheckStatus.idle);

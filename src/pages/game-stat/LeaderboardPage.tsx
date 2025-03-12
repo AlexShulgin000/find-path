@@ -5,23 +5,24 @@ import {Stat} from "../../components/stat/Stat.js";
 import {Button} from "../../components/button/Button.js";
 import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
-import {DataService} from "../../services/DataService.js";
 import {LoadingPage} from "../loading/LoadingPage.js";
 import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
+import {LeadersDataService} from "../../services/LeadersDataService.js";
 
 export const LeaderboardPage = ({
   context,
   onChangeActivePage,
-  gameData,
   currentUser,
 }: IPageProps) => {
-  const dataService = new DataService({context, gameData, currentUser});
   const {data: leaders, loading: leadersLoading} = useAsyncGeneric(async () => {
-    return await dataService.getLeaderboard();
+    return await LeadersDataService.getLeaderboard({context});
   });
   const {data: currentUserFromLeaders, loading: currentUserFromLeadersLoading} =
     useAsyncGeneric(async () => {
-      return await dataService.getCurrentUserFromLeaderboard();
+      return await LeadersDataService.getCurrentUserFromLeaderboard({
+        currentUser,
+        context,
+      });
     });
 
   const appWidth = context.dimensions?.width;

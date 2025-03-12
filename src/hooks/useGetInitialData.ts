@@ -2,7 +2,7 @@ import {useAsyncGeneric} from "./useAsyncGeneric.js";
 import {Devvit} from "@devvit/public-api";
 import {IGameData} from "../types.js";
 import {GAME_DEMO_DATA} from "../const.js";
-import {DataService} from "../services/DataService.js";
+import {LeadersDataService} from "../services/LeadersDataService.js";
 
 export const useGetInitialData = (context: Devvit.Context) => {
   const {
@@ -48,13 +48,14 @@ export const useGetInitialData = (context: Devvit.Context) => {
     error: completedGameError,
   } = useAsyncGeneric(
     async () => {
-      if (!gameData || !currentUser) return null;
-      // TODO optimise we dont need gameData here
-      const dataService = new DataService({context, gameData, currentUser});
-      return await dataService.getCurrentUserFromPostLeaders();
+      if (!currentUser) return null;
+      return await LeadersDataService.getCurrentUserFromPostLeaders({
+        context,
+        currentUser,
+      });
     },
     {
-      depends: [gameData?.postId ?? null, currentUser?.id ?? null],
+      depends: currentUser?.id ?? null,
     },
   );
 

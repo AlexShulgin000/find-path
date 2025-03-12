@@ -40,7 +40,7 @@ Devvit.addCustomPostType({
       completedGameData,
     } = useGetInitialData(context);
 
-    const [activePage, setActivePage] = useState<EPage>(EPage.game);
+    const [activePage, setActivePage] = useState<EPage>(EPage.start);
     const Page =
       gameData?.postId !== GAME_DEMO_POST_KEY && activePage === EPage.start
         ? PAGES[EPage.post]
