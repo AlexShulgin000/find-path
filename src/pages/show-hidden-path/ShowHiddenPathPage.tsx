@@ -14,6 +14,7 @@ const INITIAL_COUNTER = 10;
 export const ShowHiddenPathPage = ({
   onChangeActivePage,
   gameData,
+  context,
 }: IPageProps) => {
   const path = gameData.path;
   const lastStep = path[path.length - 1].reduce((acc, cell) => {
@@ -34,7 +35,7 @@ export const ShowHiddenPathPage = ({
 
   const isLastRow = checkIsLastRowField(path);
   return (
-    <Field>
+    <Field appWidth={context.dimensions?.width}>
       <vstack
         grow
         width="100%"

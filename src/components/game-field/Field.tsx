@@ -1,21 +1,15 @@
 import {Devvit} from "@devvit/public-api";
+import {ImageField} from "../images/ImageField.js";
+import {IImageProps} from "../images/images.types.js";
 
-interface IFieldProps {
+interface IFieldProps extends IImageProps {
   children: JSX.Element;
 }
 
-export const Field = ({children}: IFieldProps) => {
+export const Field = ({children, appWidth}: IFieldProps) => {
   return (
     <zstack width="100%" height="100%">
-      <image
-        imageHeight={576}
-        imageWidth={768}
-        height="100%"
-        width="100%"
-        url="field.jpg"
-        description="Dark game field"
-        resizeMode="cover"
-      />
+      <ImageField appWidth={appWidth} />
       {children}
     </zstack>
   );

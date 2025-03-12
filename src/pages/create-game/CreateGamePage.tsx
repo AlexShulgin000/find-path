@@ -48,7 +48,7 @@ export const CreateGamePage = ({
     const post = await context.reddit.submitPost({
       title: "Find Path!",
       subredditName: subreddit?.name ?? "",
-      preview: <LoadingPage />,
+      preview: <LoadingPage appWidth={context.dimensions?.width} />,
     });
     const postId = post.id;
     await context.redis.hSet(postId, {
@@ -62,7 +62,7 @@ export const CreateGamePage = ({
   const isLastRow = checkIsLastRowField(selectedPath);
 
   return (
-    <Field>
+    <Field appWidth={context.dimensions?.width}>
       <vstack
         width="100%"
         height="100%"

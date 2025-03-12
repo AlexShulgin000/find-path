@@ -66,3 +66,14 @@ export const GAME_DEMO_DATA: IGameData = {
   authorName: GAME_DEMO_OPPONENT_NAME,
   path: GAME_DEMO_PATH,
 };
+
+export const IMAGE_DESKTOP_NAMES = {
+  field: "field.jpg",
+  hero: "hero.png",
+  torch: "torch.jpg",
+} as const;
+
+export const IMAGE_MOBILE_NAMES = {
+  torchMobile: "torch_m.jpg",
+  fieldMobile: "field_m.jpg",
+} as const;

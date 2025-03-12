@@ -3,13 +3,13 @@ import {Devvit, useState} from "@devvit/public-api";
 import {EPage, GAME_DEMO_POST_KEY, PAGES} from "./const.js";
 import {useGetInitialData} from "./hooks/useGetInitialData.js";
 import {LoadingPage} from "./pages/loading/LoadingPage.js";
+import {ImagesCache} from "./components/images/ImagesCache.js";
 
 Devvit.configure({
   redditAPI: true,
   redis: true,
 });
 
-// TODO add upload all images before start and cache them
 Devvit.addMenuItem({
   label: "Add Find Path game",
   location: "subreddit",
@@ -20,7 +20,7 @@ Devvit.addMenuItem({
     const post = await reddit.submitPost({
       title: "Find Path!",
       subredditName: subreddit.name,
-      preview: <LoadingPage />,
+      preview: <LoadingPage appWidth={context.dimensions?.width} />,
     });
     ui.navigateTo(post);
   },
@@ -42,15 +42,23 @@ Devvit.addCustomPostType({
     // console.log(1, activePage, gameData);
 
     if (isError || isLoading || !gameData || !currentUser)
-      return <LoadingPage />;
+      return (
+        <zstack width="100%" height="100%">
+          <LoadingPage appWidth={context.dimensions?.width} />
+          <ImagesCache context={context} />
+        </zstack>
+      );
     return (
-      <Page
-        onChangeActivePage={setActivePage}
-        context={context}
-        gameData={gameData}
-        currentUser={currentUser}
-        subreddit={subreddit}
-      />
+      <zstack width="100%" height="100%">
+        <Page
+          onChangeActivePage={setActivePage}
+          context={context}
+          gameData={gameData}
+          currentUser={currentUser}
+          subreddit={subreddit}
+        />
+        <ImagesCache context={context} />
+      </zstack>
     );
   },
 });

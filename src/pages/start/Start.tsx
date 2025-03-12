@@ -6,7 +6,7 @@ import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
 
-export const StartPage = ({onChangeActivePage}: IPageProps) => {
+export const StartPage = ({onChangeActivePage, context}: IPageProps) => {
   const handleGuess = () => {
     onChangeActivePage(EPage.showHiddenPath);
   };
@@ -20,7 +20,7 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
   };
 
   return (
-    <TorchScene>
+    <TorchScene appWidth={context.dimensions?.width}>
       <hstack
         width="100%"
         height="20%"

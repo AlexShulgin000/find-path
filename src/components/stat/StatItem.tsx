@@ -60,7 +60,7 @@ export const StatItem = ({
             size={textSize}
             color={
               THEME.colors.dark
-            }>{`${leader.score > 9999 ? `9999+` : leader.score}`}</Text>
+            }>{`${leader.score > 9999 ? `9999+` : isTime ? leader.score : Math.trunc(leader.score)}`}</Text>
           {!isTime && (
             <>
               <spacer size="xsmall" />

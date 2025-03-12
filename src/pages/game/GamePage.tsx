@@ -126,7 +126,7 @@ export const GamePage = ({
   };
 
   return (
-    <Field>
+    <Field appWidth={context.dimensions?.width}>
       {heroPosition === null && (
         <vstack width="100%" alignment="top center">
           <Hero />

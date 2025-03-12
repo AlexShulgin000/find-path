@@ -32,10 +32,10 @@ export const GameStatFailPage = ({
   };
 
   if (!leaders) {
-    return <LoadingPage />;
+    return <LoadingPage appWidth={appWidth} />;
   }
   return (
-    <TorchScene>
+    <TorchScene appWidth={appWidth}>
       <Text size={4} color={THEME.colors.blood}>
         FAIL
       </Text>

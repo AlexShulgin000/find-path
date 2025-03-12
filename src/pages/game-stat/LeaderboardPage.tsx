@@ -24,12 +24,15 @@ export const LeaderboardPage = ({
       return await dataService.getCurrentUserFromLeaderboard();
     });
 
+  const appWidth = context.dimensions?.width;
+  const isDown370 = appWidth && appWidth <= 370;
+
   if (!leaders || currentUserFromLeadersLoading) {
-    return <LoadingPage />;
+    return <LoadingPage appWidth={appWidth} />;
   }
   return (
-    <TorchScene>
-      <Text size={4}>Leaderboard</Text>
+    <TorchScene appWidth={appWidth}>
+      <Text size={isDown370 ? 3 : 4}>Leaderboard</Text>
       <Stat
         context={context}
         leaders={leaders}

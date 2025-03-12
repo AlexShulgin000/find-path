@@ -29,11 +29,13 @@ export const GameStatVictoryPage = ({
     onChangeActivePage(EPage.createGame);
   };
 
+  const appWidth = context.dimensions?.width;
+
   if (!leaders || currentUserFromLeadersLoading) {
-    return <LoadingPage />;
+    return <LoadingPage appWidth={appWidth} />;
   }
   return (
-    <TorchScene>
+    <TorchScene appWidth={appWidth}>
       <Text size={4} color={THEME.colors.champagne}>
         Victory!!!
       </Text>

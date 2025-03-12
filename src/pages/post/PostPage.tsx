@@ -42,7 +42,7 @@ export const PostPage = ({
   };
 
   return (
-    <TorchScene>
+    <TorchScene appWidth={appWidth}>
       <vstack padding="medium" alignment="middle center">
         <Text>Try to guess</Text>
         <spacer size="small" />
