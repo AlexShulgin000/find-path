@@ -17,6 +17,7 @@ export interface IPageProps {
   gameData: IGameData;
   currentUser: User;
   subreddit: Subreddit | null;
+  completedGameData: ILeaderboardCurrentUser | null;
 }
 
 export type TBlock = number | null;

@@ -48,6 +48,7 @@ export const CreateGamePage = ({
     const post = await context.reddit.submitPost({
       title: "Find Path!",
       subredditName: subreddit?.name ?? "",
+      // TODO check that appWidth in mobile not be the same later for desktop if u go to this post
       preview: <LoadingPage appWidth={context.dimensions?.width} />,
     });
     const postId = post.id;

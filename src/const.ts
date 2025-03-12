@@ -7,6 +7,7 @@ import {PostPage} from "./pages/post/PostPage.js";
 import {GameStatFailPage} from "./pages/game-stat/GameStatFailPage.js";
 import {GameStatVictoryPage} from "./pages/game-stat/GameStatVictoryPage.js";
 import {LeaderboardPage} from "./pages/game-stat/LeaderboardPage.js";
+import {GameStatPostLeaders} from "./pages/game-stat/GameStatPostLeaders.js";
 
 export enum EPage {
   start = "start",
@@ -17,6 +18,7 @@ export enum EPage {
   gameFail = "gameFail",
   gameVictory = "gameVictory",
   leaderboard = "leaderboard",
+  postLeaders = "postLeaders",
 }
 
 export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
@@ -28,6 +30,7 @@ export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
   [EPage.gameFail]: GameStatFailPage,
   [EPage.gameVictory]: GameStatVictoryPage,
   [EPage.leaderboard]: LeaderboardPage,
+  [EPage.postLeaders]: GameStatPostLeaders,
 };
 
 export const MAX_ROWS = 7;

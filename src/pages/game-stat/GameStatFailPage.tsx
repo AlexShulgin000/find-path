@@ -17,7 +17,7 @@ export const GameStatFailPage = ({
   currentUser,
 }: IPageProps) => {
   const dataService = new DataService({context, gameData, currentUser});
-  const {data: leaders} = useAsyncGeneric(async () => {
+  const {data: leaders, loading: leadersLoading} = useAsyncGeneric(async () => {
     return dataService.getPostLeaders();
   });
   const appWidth = context.dimensions?.width;
@@ -31,7 +31,7 @@ export const GameStatFailPage = ({
     onChangeActivePage(EPage.showHiddenPath);
   };
 
-  if (!leaders) {
+  if (leadersLoading) {
     return <LoadingPage appWidth={appWidth} />;
   }
   return (
@@ -39,11 +39,15 @@ export const GameStatFailPage = ({
       <Text size={4} color={THEME.colors.blood}>
         FAIL
       </Text>
-      <spacer size="medium" />
-      <hstack padding="xsmall">
-        <Text>The leaders of this path</Text>
-      </hstack>
-      <Stat context={context} leaders={leaders} />
+      {!!leaders?.length && (
+        <>
+          <spacer size="medium" />
+          <hstack padding="xsmall">
+            <Text>The leaders of this path</Text>
+          </hstack>
+        </>
+      )}
+      <Stat context={context} leaders={leaders ?? []} />
       {isDown470 ? (
         <>
           <hstack padding="small" width="100%">

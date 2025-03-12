@@ -2,6 +2,7 @@ import {useAsyncGeneric} from "./useAsyncGeneric.js";
 import {Devvit} from "@devvit/public-api";
 import {IGameData} from "../types.js";
 import {GAME_DEMO_DATA} from "../const.js";
+import {DataService} from "../services/DataService.js";
 
 export const useGetInitialData = (context: Devvit.Context) => {
   const {
@@ -41,32 +42,37 @@ export const useGetInitialData = (context: Devvit.Context) => {
     },
   );
 
-  // const {
-  //   data: completedGameData,
-  //   loading: completedGameLoading,
-  //   error: completedGameError,
-  // } = useAsyncGeneric(
-  //   async () => {
-  //     if (!gameData || !currentUser) return null;
-  //     // TODO optimise we dont need gameData here
-  //     const dataService = new DataService({context, gameData, currentUser});
-  //     const res = await dataService.getCurrentUserFromPostLeaders();
-  //     if (res.rank && res.score) {
-  //       return res;
-  //     }
-  //     return null;
-  //   },
-  //   {
-  //     depends: [gameData?.postId ?? null, currentUser?.id ?? null],
-  //   },
-  // );
-  // console.log(99, completedGameData);
+  const {
+    data: completedGameData,
+    loading: completedGameLoading,
+    error: completedGameError,
+  } = useAsyncGeneric(
+    async () => {
+      if (!gameData || !currentUser) return null;
+      // TODO optimise we dont need gameData here
+      const dataService = new DataService({context, gameData, currentUser});
+      return await dataService.getCurrentUserFromPostLeaders();
+    },
+    {
+      depends: [gameData?.postId ?? null, currentUser?.id ?? null],
+    },
+  );
 
   return {
+    completedGameData: completedGameData,
     currentUser: currentUser ?? null,
     gameData: gameData ?? null,
     subreddit: subreddit ?? null,
-    isLoading: currentUserLoading || gameLoading || subredditLoading,
-    isError: !!(currentUserError || gameError || subredditError),
+    isLoading:
+      currentUserLoading ||
+      gameLoading ||
+      subredditLoading ||
+      completedGameLoading,
+    isError: !!(
+      currentUserError ||
+      gameError ||
+      subredditError ||
+      completedGameError
+    ),
   };
 };

@@ -70,7 +70,7 @@ export const GamePage = ({
     } else {
       setCheckingStatus(ECheckStatus.idle);
     }
-  }, 300);
+  }, 200);
 
   const firstCheckStep = useInterval(() => {
     firstCheckStep.stop();
@@ -79,7 +79,7 @@ export const GamePage = ({
       typeof path[heroPosition.rowIndex][heroPosition.cellIndex] === "number";
     setCheckingStatus(success ? ECheckStatus.success : ECheckStatus.fail);
     finalCheckStep.start();
-  }, 600);
+  }, 400);
 
   const handleCellPress = (rowIndex: number, cellIndex: number) => {
     if (checkingStatus !== ECheckStatus.idle) return;

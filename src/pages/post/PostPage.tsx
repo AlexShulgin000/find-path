@@ -13,6 +13,7 @@ export const PostPage = ({
   context,
   onChangeActivePage,
   gameData,
+  completedGameData,
 }: IPageProps) => {
   const path = gameData.path;
   const opponentName = gameData.authorName;
@@ -26,6 +27,7 @@ export const PostPage = ({
   }, null);
   const appWidth = context.dimensions?.width;
   const isDown420 = appWidth && appWidth <= 420;
+  console.log(1, completedGameData);
 
   const getName = () => {
     if (isDown420 && opponentName.length >= 16) {
@@ -41,15 +43,49 @@ export const PostPage = ({
     onChangeActivePage(EPage.showHiddenPath);
   };
 
+  const handelShowLeaders = () => {
+    onChangeActivePage(EPage.postLeaders);
+  };
+
+  const rank = completedGameData?.rank ?? 0;
+  const score = completedGameData?.score ?? 0;
   return (
     <TorchScene appWidth={appWidth}>
-      <vstack padding="medium" alignment="middle center">
-        <Text>Try to guess</Text>
-        <spacer size="small" />
-        <Text color={THEME.colors.blood}>{getName()}</Text>
-        <spacer size="small" />
-        <Text>path!</Text>
-      </vstack>
+      {completedGameData ? (
+        <vstack padding="medium" alignment="middle center">
+          <Text>You guessed path of</Text>
+          <spacer size="small" />
+          <Text color={THEME.colors.blood}>{getName()}</Text>
+          <spacer size="small" />
+          <hstack>
+            <Text>Yous place is</Text>
+            <spacer size="small" />
+            <Text
+              color={
+                THEME.colors.orange
+              }>{`${rank > 999999 ? "999999+" : rank}`}</Text>
+          </hstack>
+          <spacer size="small" />
+          <hstack alignment="bottom">
+            <Text>With time</Text>
+            <spacer size="small" />
+            <Text
+              color={
+                THEME.colors.orange
+              }>{`${score > 99999 ? "99999+" : score}`}</Text>
+            <Text color={THEME.colors.orange} size={1.5}>{`s`}</Text>
+          </hstack>
+        </vstack>
+      ) : (
+        <vstack padding="medium" alignment="middle center">
+          <Text>Try to guess</Text>
+          <spacer size="small" />
+          <Text color={THEME.colors.blood}>{getName()}</Text>
+          <spacer size="small" />
+          <Text>path!</Text>
+        </vstack>
+      )}
+
       {blocksUp.map((row, rowIndex) => (
         <FieldRow>
           {row.map((_, cellIndex) => {
@@ -91,8 +127,11 @@ export const PostPage = ({
         </FieldRow>
       ))}
 
-      <vstack padding="medium">
-        <Button onPress={handelGuessPress}>Guess</Button>
+      <vstack padding="medium" gap="small">
+        <Button onPress={handelGuessPress}>
+          {completedGameData ? "Improve result" : "Guess"}
+        </Button>
+        <Button onPress={handelShowLeaders}>Leaders</Button>
       </vstack>
     </TorchScene>
   );

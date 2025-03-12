@@ -6,12 +6,12 @@ import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
 import {GameStatGeneralPage} from "./GameStatGeneralPage.js";
 
-export const GameStatVictoryPage = ({
+export const GameStatPostLeaders = ({
   onChangeActivePage,
   ...props
 }: IPageProps) => {
   const handleCreatePath = () => {
-    onChangeActivePage(EPage.createGame);
+    onChangeActivePage(EPage.post);
   };
 
   return (
@@ -19,13 +19,13 @@ export const GameStatVictoryPage = ({
       {...props}
       onChangeActivePage={onChangeActivePage}
       text={
-        <Text size={4} color={THEME.colors.champagne}>
-          Victory!!!
+        <Text size={2.6} color={THEME.colors.champagne}>
+          Path leaders
         </Text>
       }
       buttons={
         <hstack padding="small" width="100%">
-          <Button onPress={handleCreatePath}>Create path</Button>
+          <Button onPress={handleCreatePath}>Back</Button>
         </hstack>
       }
     />
