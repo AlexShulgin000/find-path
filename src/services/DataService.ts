@@ -27,7 +27,7 @@ export class DataService {
   }
 
   async setUserVictoryPost(time: number) {
-    return await this.context.redis.zAdd(this.getUserPostKey(), {
+    await this.context.redis.zAdd(this.getUserPostKey(), {
       score: time,
       member: this.currentUser.username,
     });
@@ -36,11 +36,9 @@ export class DataService {
   async getPostLeaders() {
     return await this.context.redis.zRange(this.getUserPostKey(), 0, 5, {
       by: "rank",
-      reverse: true,
     });
   }
 
-  // TODO create the same for leaderboard
   async getCurrentUserFromPostLeaders() {
     const [rank, score] = await Promise.all([
       this.context.redis.zRank(
@@ -52,10 +50,11 @@ export class DataService {
         this.currentUser.username,
       ),
     ]);
+    if (rank === undefined || !score) return null;
     return {
       name: this.currentUser.username,
-      rank: rank ?? 0,
-      score: score ?? 0,
+      rank: rank + 1,
+      score,
     } as ILeaderboardCurrentUser;
   }
 
@@ -63,14 +62,43 @@ export class DataService {
   async getLeaderboard() {
     return await this.context.redis.zRange(DATA_KEYS.leaderboard, 0, 5, {
       by: "rank",
+      reverse: true,
     });
   }
 
-  async increaseUserVictoryLeaderboard(score: number) {
-    return await this.context.redis.hIncrBy(
+  async increaseUserVictoryLeaderboard(score: number, time: number) {
+    const prevScore = await this.context.redis.zScore(
       DATA_KEYS.leaderboard,
       this.currentUser.id,
-      score,
     );
+    return await Promise.all([
+      this.context.redis.zAdd(DATA_KEYS.leaderboard, {
+        score: score + (prevScore ?? 0),
+        member: this.currentUser.username,
+      }),
+      this.context.redis.zAdd(DATA_KEYS.leaderboardRank, {
+        score: time,
+        member: this.currentUser.username,
+      }),
+    ]);
+  }
+
+  async getCurrentUserFromLeaderboard() {
+    const [rank, score] = await Promise.all([
+      this.context.redis.zRank(
+        DATA_KEYS.leaderboardRank,
+        this.currentUser.username,
+      ),
+      this.context.redis.zScore(
+        DATA_KEYS.leaderboard,
+        this.currentUser.username,
+      ),
+    ]);
+    if (rank === undefined || !score) return null;
+    return {
+      name: this.currentUser.username,
+      rank: rank + 1,
+      score,
+    } as ILeaderboardCurrentUser;
   }
 }

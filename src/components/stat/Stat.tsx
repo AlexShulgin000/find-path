@@ -7,19 +7,17 @@ interface IStatProps {
   context: Devvit.Context;
   isTime?: boolean;
   leaders: ILeaderboardUser[];
-  currentUser?: ILeaderboardCurrentUser;
+  currentUser?: ILeaderboardCurrentUser | null;
 }
 
 export const Stat = ({context, isTime, leaders, currentUser}: IStatProps) => {
-  const shownLeaders = leaders.slice(0, 5);
-  const isCurrentUserInLeaders = shownLeaders.some(
+  const isCurrentUserInLeaders = leaders.some(
     leader => leader.member === currentUser?.name,
   );
-  const appWidth = context.dimensions?.width;
-  const isDown470 = appWidth && appWidth <= 470;
+  const shownLeaders = leaders.slice(0, isCurrentUserInLeaders ? 6 : 5);
 
   return (
-    <vstack width="100%" padding={isDown470 ? "small" : "medium"}>
+    <vstack width="100%" padding={"small"}>
       {shownLeaders.map((leader, i) => (
         <StatItem
           rank={i + 1}

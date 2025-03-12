@@ -4,8 +4,9 @@ import {GamePage} from "./pages/game/GamePage.js";
 import {CreateGamePage} from "./pages/create-game/CreateGamePage.js";
 import {ShowHiddenPathPage} from "./pages/show-hidden-path/ShowHiddenPathPage.js";
 import {PostPage} from "./pages/post/PostPage.js";
-import {GameStatFail} from "./pages/game-stat/GameStatFail.js";
-import {GameStatVictory} from "./pages/game-stat/GameStatVictory.js";
+import {GameStatFailPage} from "./pages/game-stat/GameStatFailPage.js";
+import {GameStatVictoryPage} from "./pages/game-stat/GameStatVictoryPage.js";
+import {LeaderboardPage} from "./pages/game-stat/LeaderboardPage.js";
 
 export enum EPage {
   start = "start",
@@ -15,6 +16,7 @@ export enum EPage {
   post = "post",
   gameFail = "gameFail",
   gameVictory = "gameVictory",
+  leaderboard = "leaderboard",
 }
 
 export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
@@ -23,8 +25,9 @@ export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
   [EPage.createGame]: CreateGamePage,
   [EPage.showHiddenPath]: ShowHiddenPathPage,
   [EPage.post]: PostPage,
-  [EPage.gameFail]: GameStatFail,
-  [EPage.gameVictory]: GameStatVictory,
+  [EPage.gameFail]: GameStatFailPage,
+  [EPage.gameVictory]: GameStatVictoryPage,
+  [EPage.leaderboard]: LeaderboardPage,
 };
 
 export const MAX_ROWS = 7;
@@ -33,7 +36,8 @@ export const MAX_CELLS = 4;
 export const SCORE_MULTIPLIER = 100;
 
 export const DATA_KEYS = {
-  leaderboard: "leaderboard",
+  leaderboard: "tLeaderboard",
+  leaderboardRank: "tLeaderboardRank",
 } as const;
 
 // x | | |

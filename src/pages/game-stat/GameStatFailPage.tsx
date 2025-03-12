@@ -10,7 +10,7 @@ import {DataService} from "../../services/DataService.js";
 import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
 import {LoadingPage} from "../loading/LoadingPage.js";
 
-export const GameStatFail = ({
+export const GameStatFailPage = ({
   context,
   onChangeActivePage,
   gameData,
@@ -36,9 +36,13 @@ export const GameStatFail = ({
   }
   return (
     <TorchScene>
-      <Text size={5} color={THEME.colors.blood}>
+      <Text size={4} color={THEME.colors.blood}>
         FAIL
       </Text>
+      <spacer size="medium" />
+      <hstack padding="xsmall">
+        <Text>The leaders of this path</Text>
+      </hstack>
       <Stat context={context} leaders={leaders} />
       {isDown470 ? (
         <>
@@ -50,7 +54,7 @@ export const GameStatFail = ({
           </hstack>
         </>
       ) : (
-        <hstack width="100%" padding="medium" gap="medium">
+        <hstack width="100%" padding="small" gap="medium">
           <hstack width="50%">
             <Button onPress={handleCreatePath}>Create path</Button>
           </hstack>

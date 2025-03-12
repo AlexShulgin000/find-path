@@ -1,16 +1,15 @@
-import {Devvit} from "@devvit/public-api";
 import {Text} from "../../components/text/Text.js";
-import {THEME} from "../../theme.js";
-import {Stat} from "../../components/stat/Stat.js";
+import {Devvit} from "@devvit/public-api";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
+import {Stat} from "../../components/stat/Stat.js";
 import {Button} from "../../components/button/Button.js";
 import {IPageProps} from "../../types.js";
 import {EPage} from "../../const.js";
-import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
 import {DataService} from "../../services/DataService.js";
 import {LoadingPage} from "../loading/LoadingPage.js";
+import {useAsyncGeneric} from "../../hooks/useAsyncGeneric.js";
 
-export const GameStatVictory = ({
+export const LeaderboardPage = ({
   context,
   onChangeActivePage,
   gameData,
@@ -18,32 +17,26 @@ export const GameStatVictory = ({
 }: IPageProps) => {
   const dataService = new DataService({context, gameData, currentUser});
   const {data: leaders} = useAsyncGeneric(async () => {
-    return await dataService.getPostLeaders();
+    return await dataService.getLeaderboard();
   });
-  const {data: currentUserFromLeaders} = useAsyncGeneric(async () => {
-    return await dataService.getCurrentUserFromPostLeaders();
-  });
+  const {data: currentUserFromLeaders, loading: currentUserFromLeadersLoading} =
+    useAsyncGeneric(async () => {
+      return await dataService.getCurrentUserFromLeaderboard();
+    });
 
-  const handleCreatePath = () => {
-    onChangeActivePage(EPage.createGame);
-  };
-
-  if (!leaders || !currentUserFromLeaders) {
+  if (!leaders || currentUserFromLeadersLoading) {
     return <LoadingPage />;
   }
   return (
     <TorchScene>
-      <Text size={5} color={THEME.colors.champagne}>
-        Victory!!!
-      </Text>
+      <Text size={4}>Leaderboard</Text>
       <Stat
         context={context}
         leaders={leaders}
-        isTime
         currentUser={currentUserFromLeaders}
       />
       <hstack padding="small" width="100%">
-        <Button onPress={handleCreatePath}>Create path</Button>
+        <Button onPress={() => onChangeActivePage(EPage.start)}>Back</Button>
       </hstack>
     </TorchScene>
   );

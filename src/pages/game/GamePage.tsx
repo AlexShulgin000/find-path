@@ -54,7 +54,7 @@ export const GamePage = ({
       const passedTime = +((Date.now() - time) / 1000).toFixed(2);
       const score = +(SCORE_MULTIPLIER / passedTime).toFixed(2);
       await dataService.setUserVictoryPost(passedTime);
-      await dataService.increaseUserVictoryLeaderboard(score);
+      await dataService.increaseUserVictoryLeaderboard(score, passedTime);
       onChangeActivePage(EPage.gameVictory);
     } else {
       setCheckingStatus(ECheckStatus.idle);

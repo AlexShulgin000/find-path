@@ -16,7 +16,7 @@ export const StartPage = ({onChangeActivePage}: IPageProps) => {
   };
 
   const handleShowLeaderTable = () => {
-    console.log("add table");
+    onChangeActivePage(EPage.leaderboard);
   };
 
   return (

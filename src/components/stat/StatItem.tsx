@@ -8,7 +8,7 @@ interface IStatItemProps {
   context: Devvit.Context;
   rank?: number;
   isTime?: boolean;
-  currentUser?: ILeaderboardCurrentUser;
+  currentUser?: ILeaderboardCurrentUser | null;
 }
 
 export const StatItem = ({
@@ -22,12 +22,8 @@ export const StatItem = ({
   const isDown570 = appWidth && appWidth <= 570;
   const isDown470 = appWidth && appWidth <= 470;
   const isDown420 = appWidth && appWidth <= 420;
-  const isDown320 = appWidth && appWidth <= 320;
 
   const getName = (name: string) => {
-    if (isDown320 && name.length >= 12) {
-      return `${name.slice(0, 12)}...`;
-    }
     if (isDown420 && name.length >= 16) {
       return `${name.slice(0, 16)}...`;
     }
@@ -45,33 +41,37 @@ export const StatItem = ({
 
   const textSize = isDown470 ? 1.5 : 2;
 
+  const bg =
+    currentUser?.name === leader.member ? THEME.colors.champagne : "white";
   return (
     <>
       <spacer size="xsmall" />
-      <hstack
-        width="100%"
-        padding="medium"
-        backgroundColor={
-          currentUser?.name === leader.member ? THEME.colors.champagne : "white"
-        }>
-        <hstack>
+      <hstack width="100%" padding="medium" backgroundColor={bg}>
+        <hstack alignment="middle" grow>
           <Text
             size={textSize}
             color={
               THEME.colors.dark
-            }>{`${isDown420 || !rank ? "" : `${rank}. `}${getName(leader.member)}`}</Text>
+            }>{`${rank ? `${rank}.` : ""}${getName(leader.member)}`}</Text>
         </hstack>
-        <hstack alignment="end bottom" grow>
+        <hstack alignment="end middle">
+          <hstack width="10px" backgroundColor={bg} height="100%" />
           <Text
             size={textSize}
             color={
               THEME.colors.dark
-            }>{`${leader.score > 99 ? "99+" : leader.score}`}</Text>
+            }>{`${leader.score > 9999 ? `9999+` : leader.score}`}</Text>
+          {!isTime && (
+            <>
+              <spacer size="xsmall" />
+              <text color={THEME.colors.dark}>✦</text>
+            </>
+          )}
           <hstack width="3px" />
           {!!isTime && (
             <Text
               color={THEME.colors.dark}
-              size={isDown470 ? 1 : 1.5}>{`s`}</Text>
+              size={isDown470 ? 1.3 : 1.5}>{`s`}</Text>
           )}
         </hstack>
       </hstack>

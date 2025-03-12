@@ -10,8 +10,6 @@ Devvit.configure({
 });
 
 // TODO add upload all images before start and cache them
-
-// Add a menu item to the subreddit menu for instantiating the new experience post
 Devvit.addMenuItem({
   label: "Add Find Path game",
   location: "subreddit",
@@ -29,7 +27,6 @@ Devvit.addMenuItem({
 });
 
 // TODO check all pages and data with no reg user
-// Add a post type definition
 Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
@@ -37,12 +34,12 @@ Devvit.addCustomPostType({
     const {isError, isLoading, gameData, subreddit, currentUser} =
       useGetInitialData(context);
 
-    const [activePage, setActivePage] = useState<EPage>(EPage.game);
+    const [activePage, setActivePage] = useState<EPage>(EPage.start);
     const Page =
       gameData?.postId !== GAME_DEMO_POST_KEY && activePage === EPage.start
         ? PAGES[EPage.post]
         : PAGES[activePage];
-    // console.log(1, context.postId, activePage, gameData);
+    // console.log(1, activePage, gameData);
 
     if (isError || isLoading || !gameData || !currentUser)
       return <LoadingPage />;
