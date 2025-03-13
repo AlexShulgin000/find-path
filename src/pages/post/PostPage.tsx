@@ -27,7 +27,6 @@ export const PostPage = ({
   }, null);
   const appWidth = context.dimensions?.width;
   const isDown420 = appWidth && appWidth <= 420;
-  console.log(1, completedGameData);
 
   const getName = () => {
     if (isDown420 && opponentName.length >= 16) {
@@ -58,7 +57,7 @@ export const PostPage = ({
           <Text color={THEME.colors.blood}>{getName()}</Text>
           <spacer size="small" />
           <hstack>
-            <Text>Yous place is</Text>
+            <Text>Your place is</Text>
             <spacer size="small" />
             <Text
               color={

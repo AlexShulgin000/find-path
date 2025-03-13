@@ -8,6 +8,7 @@ import {GameStatFailPage} from "./pages/game-stat/GameStatFailPage.js";
 import {GameStatVictoryPage} from "./pages/game-stat/GameStatVictoryPage.js";
 import {LeaderboardPage} from "./pages/game-stat/LeaderboardPage.js";
 import {GameStatPostLeaders} from "./pages/game-stat/GameStatPostLeaders.js";
+import {MyPathsPage} from "./pages/my-paths/MyPathsPage.js";
 
 export enum EPage {
   start = "start",
@@ -19,6 +20,7 @@ export enum EPage {
   gameVictory = "gameVictory",
   leaderboard = "leaderboard",
   postLeaders = "postLeaders",
+  myPaths = "myPaths",
 }
 
 export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
@@ -31,17 +33,13 @@ export const PAGES: Record<EPage, (props: IPageProps) => JSX.Element> = {
   [EPage.gameVictory]: GameStatVictoryPage,
   [EPage.leaderboard]: LeaderboardPage,
   [EPage.postLeaders]: GameStatPostLeaders,
+  [EPage.myPaths]: MyPathsPage,
 };
 
 export const MAX_ROWS = 7;
 export const MAX_CELLS = 4;
 
 export const SCORE_MULTIPLIER = 100;
-
-export const DATA_KEYS = {
-  leaderboard: "tLeaderboard",
-  leaderboardRank: "tLeaderboardRank",
-} as const;
 
 // x | | |
 // x x x |
@@ -80,3 +78,5 @@ export const IMAGE_MOBILE_NAMES = {
   torchMobile: "torch_m.jpg",
   fieldMobile: "field_m.jpg",
 } as const;
+
+export const PREFIX_USER_POSTS_KEY = "user_posts_";

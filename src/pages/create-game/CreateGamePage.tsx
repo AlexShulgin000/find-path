@@ -11,15 +11,12 @@ import {Text} from "../../components/text/Text.js";
 import {Button} from "../../components/button/Button.js";
 import {checkIsLastRowField} from "../../utils.js";
 import {LoadingPage} from "../loading/LoadingPage.js";
+import {PostDataService} from "../../services/PostDataService.js";
 
 const getEmptyBlocks = (): TBlocks =>
   new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
 
-export const CreateGamePage = ({
-  context,
-  subreddit,
-  currentUser,
-}: IPageProps) => {
+export const CreateGamePage = ({context, currentUser}: IPageProps) => {
   const [selectedPath, setSelectedPath] = useState<TBlocks>(getEmptyBlocks());
   const [step, setStep] = useState<null | number>(null);
   const [loading, setLoading] = useState(false);
@@ -47,16 +44,19 @@ export const CreateGamePage = ({
     setLoading(true);
     const post = await context.reddit.submitPost({
       title: "Find Path!",
-      subredditName: subreddit?.name ?? "",
-      // TODO check that appWidth in mobile not be the same later for desktop if u go to this post
-      preview: <LoadingPage appWidth={context.dimensions?.width} />,
+      subredditName: context.subredditName ?? "",
+      preview: <LoadingPage />,
     });
     const postId = post.id;
-    await context.redis.hSet(postId, {
-      postId: post.id,
-      authorName: currentUser?.username ?? "",
-      path: JSON.stringify(selectedPath),
-    });
+    await Promise.all([
+      PostDataService.setLastUserPosts({context, currentUser}, postId),
+      // TODO to PostDataService
+      context.redis.hSet(postId, {
+        postId,
+        authorName: currentUser.username,
+        path: JSON.stringify(selectedPath),
+      }),
+    ]);
     context.ui.navigateTo(post);
   };
 

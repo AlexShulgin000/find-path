@@ -1,6 +1,11 @@
 import {Devvit, User} from "@devvit/public-api";
 import {ILeaderboardCurrentUser} from "../types.js";
-import {DATA_KEYS} from "../const.js";
+import {PREFIX_USER_POSTS_KEY} from "../const.js";
+
+const DATA_KEYS = {
+  leaderboard: "tLeaderboard",
+  leaderboardRank: "tLeaderboardRank",
+} as const;
 
 interface IRequestParams {
   context: Devvit.Context;
@@ -15,15 +20,15 @@ export class LeadersDataService {
   }
 
   // post
-  private static getUserPostKey(context: IRequestParams["context"]) {
-    return `post_leaders_${LeadersDataService.getUserPostId(context)}`;
+  private static getPostLeadersKey(context: IRequestParams["context"]) {
+    return `${PREFIX_USER_POSTS_KEY}${LeadersDataService.getUserPostId(context)}`;
   }
 
   static async setUserVictoryPost(
     {currentUser, context}: IRequestParams,
     {time}: {time: number},
   ) {
-    await context.redis.zAdd(LeadersDataService.getUserPostKey(context), {
+    await context.redis.zAdd(LeadersDataService.getPostLeadersKey(context), {
       score: time,
       member: currentUser.username,
     });
@@ -31,7 +36,7 @@ export class LeadersDataService {
 
   static async getPostLeaders({context}: Pick<IRequestParams, "context">) {
     return await context.redis.zRange(
-      LeadersDataService.getUserPostKey(context),
+      LeadersDataService.getPostLeadersKey(context),
       0,
       5,
       {
@@ -46,11 +51,11 @@ export class LeadersDataService {
   }: IRequestParams) {
     const [rank, score] = await Promise.all([
       context.redis.zRank(
-        LeadersDataService.getUserPostKey(context),
+        LeadersDataService.getPostLeadersKey(context),
         currentUser.username,
       ),
       context.redis.zScore(
-        LeadersDataService.getUserPostKey(context),
+        LeadersDataService.getPostLeadersKey(context),
         currentUser.username,
       ),
     ]);

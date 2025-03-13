@@ -20,7 +20,7 @@ Devvit.addMenuItem({
     const post = await reddit.submitPost({
       title: "Find Path!",
       subredditName: subreddit.name,
-      preview: <LoadingPage appWidth={context.dimensions?.width} />,
+      preview: <LoadingPage />,
     });
     ui.navigateTo(post);
   },
@@ -31,21 +31,14 @@ Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
   render: context => {
-    const {
-      isError,
-      isLoading,
-      gameData,
-      subreddit,
-      currentUser,
-      completedGameData,
-    } = useGetInitialData(context);
+    const {isError, isLoading, gameData, currentUser, completedGameData} =
+      useGetInitialData(context);
 
     const [activePage, setActivePage] = useState<EPage>(EPage.start);
     const Page =
       gameData?.postId !== GAME_DEMO_POST_KEY && activePage === EPage.start
         ? PAGES[EPage.post]
         : PAGES[activePage];
-    // console.log(1, activePage, gameData);
 
     if (isError || isLoading || !gameData || !currentUser)
       return (
@@ -62,7 +55,6 @@ Devvit.addCustomPostType({
           gameData={gameData}
           completedGameData={completedGameData}
           currentUser={currentUser}
-          subreddit={subreddit}
         />
         <ImagesCache context={context} />
       </zstack>

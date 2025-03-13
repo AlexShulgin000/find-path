@@ -31,7 +31,6 @@ export const GamePage = ({
 }: IPageProps) => {
   const path = gameData.path;
   const opponentName = gameData?.authorName;
-  // TODO transfrom to Set with useStateGeneric ?
   const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
   const [heroPosition, setHeroPosition] = useStateGeneric<IHeroPosition | null>(
     null,

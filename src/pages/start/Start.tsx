@@ -19,6 +19,10 @@ export const StartPage = ({onChangeActivePage, context}: IPageProps) => {
     onChangeActivePage(EPage.leaderboard);
   };
 
+  const handleShowMyPathsPage = () => {
+    onChangeActivePage(EPage.myPaths);
+  };
+
   return (
     <TorchScene appWidth={context.dimensions?.width}>
       <hstack
@@ -65,6 +69,7 @@ export const StartPage = ({onChangeActivePage, context}: IPageProps) => {
         <Button onPress={handleGuess}>Guess</Button>
         <Button onPress={handleCreate}>Create</Button>
         <Button onPress={handleShowLeaderTable}>Leaderboard</Button>
+        <Button onPress={handleShowMyPathsPage}>My paths</Button>
       </vstack>
     </TorchScene>
   );

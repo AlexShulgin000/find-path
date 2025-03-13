@@ -10,15 +10,7 @@ export const useGetInitialData = (context: Devvit.Context) => {
     loading: currentUserLoading,
     error: currentUserError,
   } = useAsyncGeneric(async () => {
-    return await context.reddit.getCurrentUser();
-  });
-
-  const {
-    data: subreddit,
-    loading: subredditLoading,
-    error: subredditError,
-  } = useAsyncGeneric(async () => {
-    return await context.reddit.getCurrentSubreddit();
+    return (await context.reddit.getCurrentUser()) ?? null;
   });
 
   const postId = context.postId;
@@ -60,20 +52,10 @@ export const useGetInitialData = (context: Devvit.Context) => {
   );
 
   return {
-    completedGameData: completedGameData,
-    currentUser: currentUser ?? null,
-    gameData: gameData ?? null,
-    subreddit: subreddit ?? null,
-    isLoading:
-      currentUserLoading ||
-      gameLoading ||
-      subredditLoading ||
-      completedGameLoading,
-    isError: !!(
-      currentUserError ||
-      gameError ||
-      subredditError ||
-      completedGameError
-    ),
+    completedGameData,
+    currentUser,
+    gameData,
+    isLoading: currentUserLoading || gameLoading || completedGameLoading,
+    isError: !!(currentUserError || gameError || completedGameError),
   };
 };

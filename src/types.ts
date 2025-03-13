@@ -1,5 +1,5 @@
 import {EPage} from "./const.js";
-import {Devvit, Subreddit, User} from "@devvit/public-api";
+import {Devvit, User} from "@devvit/public-api";
 
 type SizePixels = `${number}px`;
 type SizePercent = `${number}%`;
@@ -16,7 +16,6 @@ export interface IPageProps {
   context: Devvit.Context;
   gameData: IGameData;
   currentUser: User;
-  subreddit: Subreddit | null;
   completedGameData: ILeaderboardCurrentUser | null;
 }
 
