@@ -12,6 +12,7 @@ interface IMyPathProps {
 export const MyPath = ({gameData, played, onPress}: IMyPathProps) => {
   return (
     <vstack
+      width="120px"
       padding="xsmall"
       alignment="center"
       onPress={() => onPress(gameData.postId)}>
@@ -34,13 +35,19 @@ export const MyPath = ({gameData, played, onPress}: IMyPathProps) => {
           </hstack>
         ))}
       </vstack>
-      {!!played && (
+      {played ? (
         <vstack padding="small" gap="small">
           <hstack alignment="center">
             <Text size={1.2}>Played times</Text>
           </hstack>
           <hstack alignment="center">
             <Text size={1.2}>{`${played}`}</Text>
+          </hstack>
+        </vstack>
+      ) : (
+        <vstack padding="small" gap="small">
+          <hstack alignment="center">
+            <Text size={1.2}>Not played</Text>
           </hstack>
         </vstack>
       )}

@@ -15,30 +15,27 @@ export class PostDataService {
   }
 
   static async getLastUserPosts({context, currentUser}: IRequestParams) {
-    try {
-      const ids = await PostDataService.getLastUserPostsIds({
-        context,
-        currentUser,
-      });
-      if (!ids) return null;
-      const gameData = await Promise.all(
-        ids.map(id => context.redis.hGetAll(id)),
-      );
-      const played = await Promise.all(
-        ids.map(id => context.redis.zCard(`${PREFIX_USER_POSTS_KEY}${id}`)),
-      );
+    const ids = await PostDataService.getLastUserPostsIds({
+      context,
+      currentUser,
+    });
+    if (!ids) return null;
+    const gameData = await Promise.all(
+      ids.map(id => context.redis.hGetAll(id)),
+    );
+    // TODO change here and after each play button create request
+    const played = await Promise.all(
+      ids.map(id => context.redis.zCard(`${PREFIX_USER_POSTS_KEY}${id}`)),
+    );
 
-      if (!gameData) return null;
-      if (gameData.length !== played.length) return null;
-      return gameData.map((gameData, i) => ({
-        postId: gameData.postId,
-        authorName: gameData.authorName,
-        path: JSON.parse(gameData.path),
-        played: played[i],
-      })) as (IGameData & {played: number})[];
-    } catch (_) {
-      return null;
-    }
+    if (!gameData) return null;
+    if (gameData.length !== played.length) return null;
+    return gameData.map((gameData, i) => ({
+      postId: gameData.postId,
+      authorName: gameData.authorName,
+      path: JSON.parse(gameData.path),
+      played: played[i],
+    })) as (IGameData & {played: number})[];
   }
 
   static async getLastUserPostsIds({context, currentUser}: IRequestParams) {

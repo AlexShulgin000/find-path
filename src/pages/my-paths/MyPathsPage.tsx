@@ -19,6 +19,7 @@ export const MyPathsPage = ({
       return await PostDataService.getLastUserPosts({context, currentUser});
     },
   );
+  console.log(123, lastPosts, lastPostsLoading);
 
   const handlePress = async (postId: string) => {
     const post = await context.reddit.getPostById(postId);
@@ -35,11 +36,7 @@ export const MyPathsPage = ({
           <Text>No paths yet</Text>
         </vstack>
       ) : (
-        <vstack
-          width="100%"
-          height="100%"
-          alignment="center middle"
-          padding="medium">
+        <vstack width="100%" alignment="center middle" padding="medium">
           <zstack alignment="center">
             <Text>My last paths</Text>
           </zstack>
