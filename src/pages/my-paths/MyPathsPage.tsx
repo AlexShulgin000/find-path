@@ -19,7 +19,6 @@ export const MyPathsPage = ({
       return await PostDataService.getLastUserPosts({context, currentUser});
     },
   );
-  console.log(123, lastPosts, lastPostsLoading);
 
   const handlePress = async (postId: string) => {
     const post = await context.reddit.getPostById(postId);
@@ -45,7 +44,7 @@ export const MyPathsPage = ({
             {lastPosts.slice(0, 2).map(post => (
               <MyPath
                 gameData={post}
-                played={post.played}
+                passed={post.passed}
                 onPress={handlePress}
               />
             ))}
@@ -54,7 +53,7 @@ export const MyPathsPage = ({
             {lastPosts.slice(2, 4).map(post => (
               <MyPath
                 gameData={post}
-                played={post.played}
+                passed={post.passed}
                 onPress={handlePress}
               />
             ))}

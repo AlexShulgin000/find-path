@@ -5,11 +5,11 @@ import {Text} from "../../components/text/Text.js";
 
 interface IMyPathProps {
   gameData: IGameData;
-  played: number;
+  passed: number;
   onPress: (postId: string) => void;
 }
 
-export const MyPath = ({gameData, played, onPress}: IMyPathProps) => {
+export const MyPath = ({gameData, passed, onPress}: IMyPathProps) => {
   return (
     <vstack
       width="120px"
@@ -35,13 +35,13 @@ export const MyPath = ({gameData, played, onPress}: IMyPathProps) => {
           </hstack>
         ))}
       </vstack>
-      {played ? (
+      {passed ? (
         <vstack padding="small" gap="small">
           <hstack alignment="center">
-            <Text size={1.2}>Played times</Text>
+            <Text size={1.2}>Passed times</Text>
           </hstack>
           <hstack alignment="center">
-            <Text size={1.2}>{`${played}`}</Text>
+            <Text size={1.2}>{`${passed > 99999 ? "99999+" : passed}`}</Text>
           </hstack>
         </vstack>
       ) : (

@@ -23,19 +23,18 @@ export class PostDataService {
     const gameData = await Promise.all(
       ids.map(id => context.redis.hGetAll(id)),
     );
-    // TODO change here and after each play button create request
-    const played = await Promise.all(
+    const passedData = await Promise.all(
       ids.map(id => context.redis.zCard(`${PREFIX_USER_POSTS_KEY}${id}`)),
     );
 
     if (!gameData) return null;
-    if (gameData.length !== played.length) return null;
+    if (gameData.length !== passedData.length) return null;
     return gameData.map((gameData, i) => ({
       postId: gameData.postId,
       authorName: gameData.authorName,
       path: JSON.parse(gameData.path),
-      played: played[i],
-    })) as (IGameData & {played: number})[];
+      passed: passedData[i],
+    })) as (IGameData & {passed: number})[];
   }
 
   static async getLastUserPostsIds({context, currentUser}: IRequestParams) {
