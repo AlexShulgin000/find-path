@@ -1,4 +1,4 @@
-import {IHeroPosition, TAllowedSteps, TBlocks} from "../../types.js";
+import {IHeroPosition, TAllowedSteps, TBlock, TBlocks} from "../../types.js";
 
 /**
  * Response: {rowIndex: Set<cellIndex>}
@@ -6,33 +6,27 @@ import {IHeroPosition, TAllowedSteps, TBlocks} from "../../types.js";
 export const getHeroAllowedSteps = (
   blocks: TBlocks,
   hPosition: IHeroPosition | null,
+  passedPath: Record<string, TBlock>,
 ) => {
   if (!hPosition) return {};
   const steps: TAllowedSteps = {};
-  const currentRowIndex = hPosition.rowIndex;
-  const currentCellIndex = hPosition.cellIndex;
-  const row = blocks[currentRowIndex];
-  const currentStepNumber = blocks[currentRowIndex][currentCellIndex];
+  const hRowIndex = hPosition.rowIndex;
+  const hCellIndex = hPosition.cellIndex;
+  const row = blocks[hRowIndex];
 
   for (let celIndex = 0; celIndex < row.length; celIndex++) {
-    const cellNumber = blocks[currentRowIndex][celIndex];
     // right / left
-    if (!cellNumber || (currentStepNumber && cellNumber > currentStepNumber)) {
-      if (
-        celIndex === currentCellIndex + 1 ||
-        celIndex === currentCellIndex - 1
-      ) {
-        steps[currentRowIndex] = new Set([
-          ...(steps[currentRowIndex] ?? []),
-          celIndex,
-        ]);
-      }
+    if (
+      passedPath[`${hRowIndex}.${celIndex}`] === undefined &&
+      (celIndex === hCellIndex + 1 || celIndex === hCellIndex - 1)
+    ) {
+      steps[hRowIndex] = new Set([...(steps[hRowIndex] ?? []), celIndex]);
     }
   }
   // bottom
-  const nextRow = blocks[currentRowIndex + 1];
+  const nextRow = blocks[hRowIndex + 1];
   if (nextRow) {
-    steps[currentRowIndex + 1] = new Set([currentCellIndex]);
+    steps[hRowIndex + 1] = new Set([hCellIndex]);
   }
   return steps;
 };

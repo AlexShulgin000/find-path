@@ -9,6 +9,7 @@ interface IButtonPops {
   height?: SizeString;
   onPress?: () => void;
   disabled?: boolean;
+  padding?: Devvit.Blocks.ContainerPadding;
 }
 
 export const Button = ({
@@ -17,13 +18,14 @@ export const Button = ({
   height = "40px",
   onPress,
   disabled,
+  padding = "small",
 }: IButtonPops) => {
   return (
     <hstack
       height={height}
       width={width}
       alignment="center middle"
-      padding="small"
+      padding={padding}
       border="thick"
       borderColor={disabled ? THEME.colorsDisabled.blood : THEME.colors.blood}
       backgroundColor={disabled ? THEME.colorsDisabled.dark : THEME.colors.dark}

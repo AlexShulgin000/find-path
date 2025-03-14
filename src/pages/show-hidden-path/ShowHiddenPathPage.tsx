@@ -8,6 +8,7 @@ import {checkIsLastRowField} from "../../utils.js";
 import {EPage} from "../../const.js";
 import {Text} from "../../components/text/Text.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
+import {Button} from "../../components/button/Button.js";
 
 const INITIAL_COUNTER = 10;
 
@@ -30,6 +31,11 @@ export const ShowHiddenPathPage = ({
       onChangeActivePage(EPage.game);
     }
   }, 1000);
+
+  const handleSkip = () => {
+    counterTimer.stop();
+    onChangeActivePage(EPage.game);
+  };
 
   counter === INITIAL_COUNTER && counterTimer.start();
 
@@ -67,8 +73,15 @@ export const ShowHiddenPathPage = ({
             })}
           </FieldRow>
         ))}
-        <hstack width="100%" padding="medium" alignment="middle center">
-          <Text size={3}>{`${counter}`}</Text>
+        <hstack padding="medium" alignment="middle center" width="240px">
+          <hstack>
+            <Button height="22px" padding="xsmall" onPress={handleSkip}>
+              Skip
+            </Button>
+          </hstack>
+          <hstack width="100%" grow alignment="end">
+            <Text size={3}>{`${counter}`}</Text>
+          </hstack>
         </hstack>
       </vstack>
       )

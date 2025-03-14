@@ -4,7 +4,6 @@ import {PREFIX_USER_POSTS_KEY} from "../const.js";
 
 const DATA_KEYS = {
   leaderboard: "tLeaderboard",
-  leaderboardRank: "tLeaderboardRank",
 } as const;
 
 interface IRequestParams {
@@ -77,21 +76,16 @@ export class LeadersDataService {
 
   static async increaseUserVictoryLeaderboard(
     {currentUser, context}: IRequestParams,
-    {score, time}: {score: number; time: number},
+    {score}: {score: number},
   ) {
-    const prevScore = await context.redis.zScore(
-      DATA_KEYS.leaderboard,
-      currentUser.id,
-    );
+    const alreadyPassedThisPath =
+      await LeadersDataService.getCurrentUserFromPostLeaders({
+        context,
+        currentUser,
+      });
+    if (alreadyPassedThisPath) return;
     return await Promise.all([
-      context.redis.zAdd(DATA_KEYS.leaderboard, {
-        score: score + (prevScore ?? 0),
-        member: currentUser.username,
-      }),
-      context.redis.zAdd(DATA_KEYS.leaderboardRank, {
-        score: time,
-        member: currentUser.username,
-      }),
+      context.redis.zIncrBy(DATA_KEYS.leaderboard, currentUser.username, score),
     ]);
   }
 
@@ -99,14 +93,15 @@ export class LeadersDataService {
     currentUser,
     context,
   }: IRequestParams) {
-    const [rank, score] = await Promise.all([
-      context.redis.zRank(DATA_KEYS.leaderboardRank, currentUser.username),
+    const [rank, leaderCounts, score] = await Promise.all([
+      context.redis.zRank(DATA_KEYS.leaderboard, currentUser.username),
+      context.redis.zCard(DATA_KEYS.leaderboard),
       context.redis.zScore(DATA_KEYS.leaderboard, currentUser.username),
     ]);
     if (rank === undefined || !score) return null;
     return {
       name: currentUser.username,
-      rank: rank + 1,
+      rank: leaderCounts - rank,
       score,
     } as ILeaderboardCurrentUser;
   }

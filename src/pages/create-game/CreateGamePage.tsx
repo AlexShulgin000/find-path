@@ -1,6 +1,6 @@
 import {Devvit, useState} from "@devvit/public-api";
 import {IPageProps, TBlocks} from "../../types.js";
-import {MAX_CELLS, MAX_ROWS} from "../../const.js";
+import {EPage, MAX_CELLS, MAX_ROWS} from "../../const.js";
 import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {AllowedStep} from "../../components/game-field/AllowedStep.js";
@@ -16,7 +16,11 @@ import {PostDataService} from "../../services/PostDataService.js";
 const getEmptyBlocks = (): TBlocks =>
   new Array(MAX_ROWS).fill(null).map(() => new Array(MAX_CELLS).fill(null));
 
-export const CreateGamePage = ({context, currentUser}: IPageProps) => {
+export const CreateGamePage = ({
+  context,
+  currentUser,
+  onChangeActivePage,
+}: IPageProps) => {
   const [selectedPath, setSelectedPath] = useState<TBlocks>(getEmptyBlocks());
   const [step, setStep] = useState<null | number>(null);
   const [loading, setLoading] = useState(false);
@@ -49,15 +53,14 @@ export const CreateGamePage = ({context, currentUser}: IPageProps) => {
     });
     const postId = post.id;
     await Promise.all([
-      PostDataService.setLastUserPosts({context, currentUser}, postId),
-      // TODO to PostDataService
-      context.redis.hSet(postId, {
-        postId,
-        authorName: currentUser.username,
-        path: JSON.stringify(selectedPath),
-      }),
+      PostDataService.addLastUserPost({context, currentUser}, postId),
+      PostDataService.addPost(
+        {context, currentUser},
+        {postId, path: selectedPath},
+      ),
     ]);
     context.ui.navigateTo(post);
+    onChangeActivePage(EPage.start);
   };
 
   const isLastRow = checkIsLastRowField(selectedPath);

@@ -1,5 +1,5 @@
 import {Devvit, useInterval, useState} from "@devvit/public-api";
-import {IHeroPosition, IPageProps} from "../../types.js";
+import {IHeroPosition, IPageProps, TBlock} from "../../types.js";
 import {FieldRow} from "../../components/game-field/FieldRow.js";
 import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {Hero} from "./components/Hero.js";
@@ -31,12 +31,14 @@ export const GamePage = ({
 }: IPageProps) => {
   const path = gameData.path;
   const opponentName = gameData?.authorName;
-  const [passedPath, setPassedPath] = useState({}); // {"rowIndex.cellIndex": boolean}
+  const [passedPath, setPassedPath] = useStateGeneric<Record<string, TBlock>>(
+    {},
+  ); // {"rowIndex.cellIndex": pathNumber | null}
   const [heroPosition, setHeroPosition] = useStateGeneric<IHeroPosition | null>(
     null,
   );
   const [checkingStatus, setCheckingStatus] = useState(ECheckStatus.idle);
-  const heroAllowedSteps = getHeroAllowedSteps(path, heroPosition);
+  const heroAllowedSteps = getHeroAllowedSteps(path, heroPosition, passedPath);
   const [time] = useState(Date.now());
 
   const handleSuccess = async () => {
@@ -57,7 +59,7 @@ export const GamePage = ({
       );
       await LeadersDataService.increaseUserVictoryLeaderboard(
         {context, currentUser},
-        {score, time: passedTime},
+        {score},
       );
       onChangeActivePage(EPage.gameVictory);
     } else {
@@ -78,10 +80,24 @@ export const GamePage = ({
 
   const firstCheckStep = useInterval(() => {
     firstCheckStep.stop();
-    const success =
-      heroPosition &&
-      typeof path[heroPosition.rowIndex][heroPosition.cellIndex] === "number";
-    setCheckingStatus(success ? ECheckStatus.success : ECheckStatus.fail);
+    const currentNum = heroPosition
+      ? path[heroPosition.rowIndex][heroPosition.cellIndex]
+      : null;
+    const prevNum = Object.values(passedPath).reduce(
+      (acc, num) => ((num ?? 0) > (acc ?? 0) ? num : acc),
+      0,
+    );
+    const isNextNumAfterPrev =
+      typeof currentNum === "number" && typeof prevNum === "number"
+        ? currentNum === prevNum + 1
+        : false;
+    const isFirstValidStep =
+      Object.values(passedPath).length === 0 && typeof currentNum === "number";
+    setCheckingStatus(
+      isNextNumAfterPrev || isFirstValidStep
+        ? ECheckStatus.success
+        : ECheckStatus.fail,
+    );
     finalCheckStep.start();
   }, 400);
 
@@ -90,7 +106,8 @@ export const GamePage = ({
     heroPosition &&
       setPassedPath(prev => ({
         ...prev,
-        [`${heroPosition.rowIndex}.${heroPosition.cellIndex}`]: true,
+        [`${heroPosition.rowIndex}.${heroPosition.cellIndex}`]:
+          path[heroPosition.rowIndex][heroPosition.cellIndex],
       }));
     setCheckingStatus(ECheckStatus.wait);
     setHeroPosition({rowIndex, cellIndex});
@@ -161,9 +178,9 @@ export const GamePage = ({
           <FieldRow>
             {row.map((_, cellIndex) => {
               const isPassedCell =
-                !!passedPath[
+                passedPath[
                   `${rowIndex}.${cellIndex}` as keyof typeof passedPath
-                ];
+                ] != undefined;
               const isHeroCell =
                 heroPosition?.rowIndex === rowIndex &&
                 heroPosition?.cellIndex === cellIndex;

@@ -1,5 +1,5 @@
 import {Devvit, User} from "@devvit/public-api";
-import {IGameData} from "../types.js";
+import {IGameData, TBlocks} from "../types.js";
 import {PREFIX_USER_POSTS_KEY} from "../const.js";
 
 interface IRequestParams {
@@ -44,7 +44,7 @@ export class PostDataService {
     return res ? (JSON.parse(res) as string[]) : null;
   }
 
-  static async setLastUserPosts(
+  static async addLastUserPost(
     {context, currentUser}: IRequestParams,
     newPostId: string,
   ) {
@@ -60,5 +60,16 @@ export class PostDataService {
       PostDataService.getLastUserPostsKey(currentUser.username),
       JSON.stringify(res),
     );
+  }
+
+  static async addPost(
+    {context, currentUser}: IRequestParams,
+    {path, postId}: {postId: string; path: TBlocks},
+  ) {
+    return await context.redis.hSet(postId, {
+      postId,
+      authorName: currentUser.username,
+      path: JSON.stringify(path),
+    });
   }
 }
