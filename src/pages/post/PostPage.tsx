@@ -1,13 +1,12 @@
 import {Devvit} from "@devvit/public-api";
 import {Text} from "../../components/text/Text.js";
 import {IPageProps, TBlocks} from "../../types.js";
-import {FieldRow} from "../../components/game-field/FieldRow.js";
-import {FieldBlock} from "../../components/game-field/FieldBlock.js";
 import {THEME} from "../../theme.js";
 import {Button} from "../../components/button/Button.js";
 import {EPage, MAX_CELLS} from "../../const.js";
-import {AllowedStep} from "../../components/game-field/AllowedStep.js";
 import {TorchScene} from "../../components/torch-scene/TorchScene.js";
+import {HiddenPostPath} from "./components/HiddenPostPath.js";
+import {ShownPostPath} from "./components/ShownPostPath.js";
 
 export const PostPage = ({
   context,
@@ -44,6 +43,10 @@ export const PostPage = ({
 
   const handelShowLeaders = () => {
     onChangeActivePage(EPage.postLeaders);
+  };
+
+  const handelCreate = () => {
+    onChangeActivePage(EPage.createGame);
   };
 
   const rank = completedGameData?.rank ?? 0;
@@ -85,51 +88,23 @@ export const PostPage = ({
         </vstack>
       )}
 
-      {blocksUp.map((row, rowIndex) => (
-        <FieldRow>
-          {row.map((_, cellIndex) => {
-            const showPoint = blocksUp[rowIndex][cellIndex] === 0;
-            return (
-              <FieldBlock
-                rowIndex={rowIndex}
-                backgroundColor={
-                  blocksUp[rowIndex][cellIndex] === null
-                    ? THEME.colors.dark
-                    : THEME.colors.orange
-                }>
-                {showPoint && <AllowedStep color={THEME.colors.dark} />}
-              </FieldBlock>
-            );
-          })}
-        </FieldRow>
-      ))}
-
-      <Text>???</Text>
-
-      {blocksBottom.map((row, rowIndex) => (
-        <FieldRow>
-          {row.map((_, cellIndex) => {
-            return (
-              <FieldBlock
-                rowIndex={rowIndex}
-                backgroundColor={
-                  blocksBottom[rowIndex][cellIndex] === null
-                    ? THEME.colors.dark
-                    : THEME.colors.orange
-                }>
-                {lastPointNumber === blocksBottom[rowIndex][cellIndex] && (
-                  <AllowedStep color={THEME.colors.dark} />
-                )}
-              </FieldBlock>
-            );
-          })}
-        </FieldRow>
-      ))}
+      {completedGameData ? (
+        <ShownPostPath path={path} lastPointNumber={lastPointNumber} />
+      ) : (
+        <HiddenPostPath
+          blocksUp={blocksUp}
+          blocksBottom={blocksBottom}
+          lastPointNumber={lastPointNumber}
+        />
+      )}
 
       <vstack padding="medium" gap="small">
-        <Button onPress={handelGuessPress}>
-          {completedGameData ? "Improve result" : "Guess"}
-        </Button>
+        {completedGameData ? (
+          <Button onPress={handelCreate}>Create path</Button>
+        ) : (
+          <Button onPress={handelGuessPress}>Guess</Button>
+        )}
+
         <Button onPress={handelShowLeaders}>Leaders</Button>
       </vstack>
     </TorchScene>

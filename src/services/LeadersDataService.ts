@@ -78,15 +78,11 @@ export class LeadersDataService {
     {currentUser, context}: IRequestParams,
     {score}: {score: number},
   ) {
-    const alreadyPassedThisPath =
-      await LeadersDataService.getCurrentUserFromPostLeaders({
-        context,
-        currentUser,
-      });
-    if (alreadyPassedThisPath) return;
-    return await Promise.all([
-      context.redis.zIncrBy(DATA_KEYS.leaderboard, currentUser.username, score),
-    ]);
+    return await context.redis.zIncrBy(
+      DATA_KEYS.leaderboard,
+      currentUser.username,
+      score,
+    );
   }
 
   static async getCurrentUserFromLeaderboard({

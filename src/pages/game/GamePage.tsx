@@ -53,14 +53,16 @@ export const GamePage = ({
       setCheckingStatus(ECheckStatus.victory);
       const passedTime = +((Date.now() - time) / 1000).toFixed(2);
       const score = +(SCORE_MULTIPLIER / passedTime).toFixed(2);
-      await LeadersDataService.setUserVictoryPost(
-        {currentUser, context},
-        {time: passedTime},
-      );
-      await LeadersDataService.increaseUserVictoryLeaderboard(
-        {context, currentUser},
-        {score},
-      );
+      await Promise.all([
+        LeadersDataService.setUserVictoryPost(
+          {currentUser, context},
+          {time: passedTime},
+        ),
+        LeadersDataService.increaseUserVictoryLeaderboard(
+          {context, currentUser},
+          {score},
+        ),
+      ]);
       onChangeActivePage(EPage.gameVictory);
     } else {
       setCheckingStatus(ECheckStatus.idle);
@@ -92,7 +94,9 @@ export const GamePage = ({
         ? currentNum === prevNum + 1
         : false;
     const isFirstValidStep =
-      Object.values(passedPath).length === 0 && typeof currentNum === "number";
+      Object.values(passedPath).length === 0 &&
+      typeof currentNum === "number" &&
+      currentNum === 0;
     setCheckingStatus(
       isNextNumAfterPrev || isFirstValidStep
         ? ECheckStatus.success

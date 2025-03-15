@@ -14,10 +14,6 @@ export const GameStatVictoryPage = ({
     onChangeActivePage(EPage.createGame);
   };
 
-  const handleImprove = () => {
-    onChangeActivePage(EPage.showHiddenPath);
-  };
-
   return (
     <GameStatGeneralPage
       {...props}
@@ -29,11 +25,8 @@ export const GameStatVictoryPage = ({
       }
       buttons={
         <hstack width="100%" padding="small" gap="medium">
-          <hstack width="50%">
+          <hstack width="100%">
             <Button onPress={handleCreatePath}>Create path</Button>
-          </hstack>
-          <hstack width="50%">
-            <Button onPress={handleImprove}>Improve</Button>
           </hstack>
         </hstack>
       }

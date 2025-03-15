@@ -41,7 +41,7 @@ export const GameStatFailPage = ({context, onChangeActivePage}: IPageProps) => {
           </hstack>
         </>
       )}
-      <Stat context={context} leaders={leaders ?? []} />
+      <Stat context={context} leaders={leaders ?? []} isTime />
       {isDown470 ? (
         <>
           <hstack padding="small" width="100%">
