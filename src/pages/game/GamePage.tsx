@@ -164,13 +164,12 @@ export const GamePage = ({
         </>
       ) : (
         <>
-          <vstack width="100%" padding="medium">
+          <hstack width="100%" padding="medium" alignment="start">
             <Text>You VS</Text>
-            <spacer size="small" />
-          </vstack>
-          <vstack alignment="end" width="100%" padding="medium">
+          </hstack>
+          <hstack alignment="end" width="100%" padding="medium">
             <Text color={THEME.colors.blood}>{getName()}</Text>
-          </vstack>
+          </hstack>
         </>
       )}
       <vstack
