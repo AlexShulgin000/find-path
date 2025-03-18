@@ -1,5 +1,6 @@
 node_modules
 .yarn
+.idea
 logs
 *.log
 npm-debug.log*
