@@ -26,7 +26,6 @@ Devvit.addMenuItem({
   },
 });
 
-// TODO check all pages and data with no reg user
 Devvit.addCustomPostType({
   name: "Find Path!",
   height: "tall",
@@ -40,7 +39,7 @@ Devvit.addCustomPostType({
         ? PAGES[EPage.post]
         : PAGES[activePage];
 
-    if (isError || isLoading || !gameData || !currentUser)
+    if (isError || isLoading || !gameData)
       return (
         <zstack width="100%" height="100%">
           <LoadingPage appWidth={context.dimensions?.width} />

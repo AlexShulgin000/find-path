@@ -1,5 +1,5 @@
 import {useAsyncGeneric} from "./useAsyncGeneric.js";
-import {Devvit} from "@devvit/public-api";
+import {Devvit, User} from "@devvit/public-api";
 import {IGameData} from "../types.js";
 import {GAME_DEMO_DATA} from "../const.js";
 import {LeadersDataService} from "../services/LeadersDataService.js";
@@ -53,7 +53,7 @@ export const useGetInitialData = (context: Devvit.Context) => {
 
   return {
     completedGameData,
-    currentUser,
+    currentUser: currentUser as User,
     gameData,
     isLoading: currentUserLoading || gameLoading || completedGameLoading,
     isError: !!(currentUserError || gameError || completedGameError),
